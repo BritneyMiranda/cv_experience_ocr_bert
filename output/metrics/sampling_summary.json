@@ -1,0 +1,26 @@
+{
+  "n_cvs": 4000,
+  "cap": 20,
+  "n_at_or_above_cap": 32,
+  "share_at_or_above_cap": 0.008,
+  "n_above_cap_clipped": 32,
+  "cap_rule_triggered": false,
+  "seed": 42,
+  "n_per_occupation": 800,
+  "per_occupation": {
+    "accountants_auditors": 800,
+    "construction_laborers": 800,
+    "elementary_middle_school_teachers": 800,
+    "registered_nurses": 800,
+    "software_developers": 800
+  },
+  "no_photo_population": {
+    "accountants_auditors": 7784,
+    "construction_laborers": 5910,
+    "elementary_middle_school_teachers": 16188,
+    "registered_nurses": 17632,
+    "software_developers": 13370
+  },
+  "cvs_with_multiple_no_photo_images": 0,
+  "download_minutes": 20.9
+}

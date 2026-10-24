@@ -1,0 +1,7 @@
+occupation,n,mean,median,std,min,max,n_at_or_above_20,share_at_or_above_20
+accountants_auditors,800.0,7.265,6.235,4.872,0.059,25.585,11.0,0.014
+construction_laborers,800.0,5.958,4.605,4.791,0.017,22.606,10.0,0.012
+elementary_middle_school_teachers,800.0,6.802,5.946,4.527,0.003,26.693,6.0,0.008
+registered_nurses,800.0,6.46,5.634,4.205,0.024,24.022,2.0,0.002
+software_developers,800.0,6.325,5.639,4.199,0.018,22.415,3.0,0.004
+ALL,4000.0,6.562,5.657,4.547,0.003,26.693,32.0,0.008

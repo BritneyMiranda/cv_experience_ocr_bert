@@ -259,7 +259,62 @@ Usa dos tipos de pista, y ninguna es una resta:
    cortos con más peso de la educación, la bajan.
 
 ## 8. BERT como regresor
-_Pendiente (Fase 5)._
+[src/train_bert.py](src/train_bert.py) ajusta **`distilbert-base-uncased`** (66 M de
+parámetros). Elegimos DistilBERT porque es el más ligero de la lista, entrena en minutos en
+una T4 y su tokenizador WordPiece separa bien los números (`2018`, `.`, `12`).
+
+**Configuración de la regresión:**
+- Una sola salida:
+  `AutoModelForSequenceClassification.from_pretrained(..., num_labels=1, problem_type="regression")`.
+- Pérdida MSE.
+- Target escalado (`y / 20`) durante el entrenamiento; las predicciones se multiplican por 20
+  y se recortan a [0, 20].
+
+**CVs largos.** Con el tokenizador de DistilBERT, los CVs limpios tienen una mediana de
+**96 tokens** y un máximo de **159**. Con `max_length=256` **ningún CV se trunca (0 de 2,800)**:
+no hace falta *head + tail* ni *chunking*, y todas las fechas llegan al modelo.
+
+**Hiperparámetros.** El learning rate se eligió en validación (15 épocas, paciencia 3):
+
+| Learning rate | Mejor MAE val | Comentario |
+|---|---:|---|
+| **5e-5** | **0.165** | Seguía mejorando en la última época |
+| 2e-5 | 0.242 | *Early stop* en la época 14 |
+| 3e-5 | 0.362 | *Early stop* en la época 7 |
+
+El MAE de validación es ruidoso mientras el learning rate es alto (oscila ±0.1 entre
+épocas) y converge cuando el *scheduler* lineal lo baja a 0. Por eso la configuración final
+usa 20 épocas y *early stopping* con paciencia 5: corta si deja de mejorar, pero no por una
+oscilación.
+
+| Parámetro | Valor |
+|---|---|
+| Learning rate | 5e-5, *warmup* lineal del 10 % y decaimiento lineal a 0 |
+| Batch size | 16 (evaluación: 64) |
+| Épocas | máximo 20, *early stopping* sobre el MAE de validación (paciencia 5); se restaura el mejor *checkpoint* |
+| Weight decay | 0.01 |
+| Max length | 256 |
+| Precisión | fp16 |
+| Semilla | 42 |
+| Hardware | GPU Tesla T4 (Google Colab) |
+| Tiempo de entrenamiento | **264 s (4.4 min)** |
+
+**Resultados en validación** (variantes para la Pregunta 3):
+
+| Variante | MAE val | RMSE | R² |
+|---|---:|---:|---:|
+| **MSE, texto limpio (modelo principal)** | **0.160** | 0.233 | 0.997 |
+| Huber (δ = 1 año), texto limpio | 0.130 | 0.186 | 0.998 |
+| MSE, OCR crudo | 0.150 | 0.224 | 0.998 |
+| MSE, sin líneas con confianza < 0.9 | 0.142 | 0.203 | 0.998 |
+
+Las diferencias entre variantes (≤ 0.03 años) son del mismo orden que la oscilación del MAE
+de validación entre épocas. Con una sola semilla por variante **no se pueden considerar
+diferencias reales**. El modelo principal sigue siendo el de MSE, la pérdida que pide el
+enunciado; Huber se discute en la Pregunta 3.
+
+Los pesos no se suben a GitHub. Se regeneran con `python -m src.train_bert` y quedan en
+`models/bert/bert/`.
 
 ## 9. Métricas finales y ganancia de BERT
 _Pendiente (Fase 6)._

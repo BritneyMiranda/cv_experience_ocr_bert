@@ -17,6 +17,7 @@ Uso:
 """
 
 import argparse
+import math
 import shutil
 import time
 
@@ -85,13 +86,15 @@ def main() -> None:
     model = AutoModelForSequenceClassification.from_pretrained(
         args.model, num_labels=1, problem_type="regression")
 
+    # Warmup del 10 % de los pasos (warmup_ratio ya no existe en transformers recientes)
+    warmup_steps = int(0.1 * math.ceil(len(train_ds) / args.batch_size) * args.epochs)
     training_args = TrainingArguments(
         output_dir=str(out_dir / "checkpoints"),
         learning_rate=args.lr,
         per_device_train_batch_size=args.batch_size,
         per_device_eval_batch_size=64,
         num_train_epochs=args.epochs,
-        warmup_ratio=0.1,
+        warmup_steps=warmup_steps,
         weight_decay=0.01,
         eval_strategy="epoch",
         save_strategy="epoch",

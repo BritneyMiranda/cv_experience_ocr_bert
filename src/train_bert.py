@@ -8,8 +8,11 @@
 - Longitud: los CVs limpios tienen a lo sumo ~160 tokens de DistilBERT, así que
   max_length=256 cubre el CV completo (se reporta cuántos se truncarían). No hace falta
   head+tail ni chunking: todas las fechas llegan al modelo.
-- Early stopping sobre el MAE de validación (en años), paciencia 3 épocas.
-- El learning rate se elige en validación entre 5e-5, 3e-5 y 2e-5 (corridas con --tag).
+- Learning rate elegido en validación entre 5e-5, 3e-5 y 2e-5 (corridas con --tag, 15
+  épocas, paciencia 3): 5e-5 ganó (MAE 0.165) y seguía mejorando en la última época,
+  porque el MAE de validación es ruidoso mientras el LR es alto y converge cuando el
+  scheduler lineal lo baja a 0. Configuración final: 20 épocas, early stopping sobre el
+  MAE de validación con paciencia 5.
 
 Uso:
     python -m src.train_bert
@@ -61,9 +64,9 @@ def main() -> None:
     parser.add_argument("--loss", default="mse", choices=["mse", "huber"])
     parser.add_argument("--lr", type=float, default=5e-5)
     parser.add_argument("--batch-size", type=int, default=16)
-    parser.add_argument("--epochs", type=int, default=15)
+    parser.add_argument("--epochs", type=int, default=20)
     parser.add_argument("--max-length", type=int, default=256)
-    parser.add_argument("--patience", type=int, default=3)
+    parser.add_argument("--patience", type=int, default=5)
     parser.add_argument("--seed", type=int, default=SEED)
     parser.add_argument("--tag", default="", help="sufijo para corridas de búsqueda (p. ej. lr3e-5)")
     args = parser.parse_args()

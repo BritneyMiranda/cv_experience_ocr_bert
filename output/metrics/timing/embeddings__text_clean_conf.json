@@ -1,0 +1,11 @@
+{
+  "model": "embeddings__text_clean_conf",
+  "text_col": "text_clean_conf",
+  "train_seconds": 5.14,
+  "inference_seconds_per_cv": 0.0017339336872100831,
+  "encoder": "sentence-transformers/all-MiniLM-L6-v2",
+  "alpha": 0.01,
+  "tokens_median": 94.0,
+  "tokens_max": 157,
+  "cvs_chunked": 0
+}

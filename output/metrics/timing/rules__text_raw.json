@@ -1,0 +1,6 @@
+{
+  "model": "rules__text_raw",
+  "text_col": "text_raw",
+  "train_seconds": 0.0,
+  "inference_seconds_per_cv": 8.74042510986328e-06
+}

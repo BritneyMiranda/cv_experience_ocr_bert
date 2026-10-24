@@ -1,0 +1,6 @@
+{
+  "model": "rules__text_clean_conf",
+  "text_col": "text_clean_conf",
+  "train_seconds": 0.0,
+  "inference_seconds_per_cv": 9.276469548543294e-06
+}

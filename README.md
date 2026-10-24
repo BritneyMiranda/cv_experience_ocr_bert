@@ -249,6 +249,15 @@ la suma de los periodos de trabajo; el error restante viene de que las fechas de
 meses y el dataset calcula con días. TF-IDF le gana a los embeddings porque los embeddings de
 frases resumen el *tema* del texto y prácticamente ignoran los dígitos de las fechas.
 
+**¿Qué usa TF-IDF?** ([output/tables/top_features_tfidf.csv](output/tables/top_features_tfidf.csv))
+Usa dos tipos de pista, y ninguna es una resta:
+1. **Los años como palabras sueltas.** `2008`, `2009`, `2010`… tienen los coeficientes más
+   positivos, y `2020`, `2021`, `2022` los más negativos. El modelo detecta *cuándo empezó* la
+   carrera, pero no calcula duraciones ni descuenta los huecos entre trabajos.
+2. **La progresión del lenguaje.** Los verbos de responsabilidad (*designed, directed, managed,
+   led*) suben la predicción. Las palabras de formación (*studied, coursework*), típicas de CVs
+   cortos con más peso de la educación, la bajan.
+
 ## 8. BERT como regresor
 _Pendiente (Fase 5)._
 

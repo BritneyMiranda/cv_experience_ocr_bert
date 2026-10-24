@@ -1,36 +1,47 @@
 # cv_experience_ocr_bert
 
-Sistema de document AI de punta a punta: lee la imagen de un CV, extrae el texto con
-**PaddleOCR** y predice los **años de experiencia laboral (0–20)** del candidato con un
-modelo **BERT** ajustado como regresor. Lo comparamos con tres baselines (mediana,
-TF-IDF + Ridge y sentence embeddings + Ridge).
+Predicción de los **años de experiencia laboral (0–20)** a partir de imágenes de CVs: el texto
+se extrae con **PaddleOCR** y se estima la experiencia con un modelo **BERT** ajustado como
+regresor, comparado con tres baselines (mediana, TF-IDF + Ridge y sentence embeddings + Ridge).
+
+**Video de presentación:** [carpeta en Google Drive](https://drive.google.com/drive/folders/1qH2hsWV4S3XRMmuO_yzWV-h1up9l6hM2?usp=sharing)
+(también en [video/link.txt](video/link.txt)).
+
+**Contenido**
+1. [Qué hace el proyecto y para quién](#1-qué-hace-el-proyecto-y-para-quién)
+2. [Muestreo y distribución de la experiencia](#2-muestreo-de-cvs-y-distribución-de-la-experiencia)
+3. [PaddleOCR: modelo y orden de lectura](#3-paddleocr-modelo-configuración-y-orden-de-lectura)
+4. [Calidad del OCR](#4-calidad-del-ocr-cer-wer-años-leídos-correctamente)
+5. [Limpieza y enmascarado](#5-limpieza-del-texto-y-enmascaramiento-de-respuestas-directas)
+6. [Partición](#6-partición-train--validation--test)
+7. [Baselines](#7-baselines)
+8. [BERT como regresor](#8-bert-como-regresor)
+9. [Métricas finales y ganancia de BERT](#9-métricas-finales-y-ganancia-de-bert)
+10. [Preguntas analíticas](#10-preguntas-analíticas)
+11. [Limitaciones y aplicaciones](#11-limitaciones-y-aplicaciones-de-negocio)
+12. [Cómo reproducir el proyecto](#12-cómo-reproducir-el-proyecto)
+13. [Cómo ejecutar la app de Streamlit](#13-cómo-ejecutar-la-app-de-streamlit)
+14. [Estructura del repositorio y dónde están los resultados](#14-estructura-del-repositorio-y-dónde-están-los-resultados)
 
 ## 1. ¿Qué hace el proyecto y para quién?
 El sistema recibe la **imagen** de un CV, la convierte en texto con PaddleOCR y estima los
-**años de experiencia laboral** del candidato. Esa cifra casi nunca está escrita en el CV:
-hay que deducirla de las fechas de cada trabajo, de cuántos puestos hay y de cuándo terminó
-la formación.
+años de experiencia laboral del candidato. Esa cifra casi nunca está escrita en el CV: hay que
+deducirla de las fechas de cada trabajo, de cuántos puestos hay y de cuándo terminó la
+formación.
 
-Está pensado para equipos que procesan muchos CVs escaneados o en PDF:
-- agencias de reclutamiento;
-- portales de empleo;
-- servicios públicos de empleo;
-- áreas de RR. HH.
+Está pensado para agencias de reclutamiento, portales de empleo, servicios públicos de empleo
+y áreas de RR. HH. que procesan muchos CVs escaneados o en PDF. Su uso es **prellenar un
+perfil o ayudar a ordenar CVs**, nunca decidir a quién se entrevista ni a quién se contrata
+(ver la Pregunta 4).
 
-Su uso es **prellenar un perfil o ayudar a ordenar CVs**, nunca decidir a quién se
-entrevista ni a quién se contrata (ver la Pregunta 4).
+Se comparan cinco modelos sobre la misma partición: una mediana, TF-IDF + Ridge, sentence
+embeddings + Ridge, DistilBERT ajustado como regresor y, como bonus, una regla que suma los
+periodos de trabajo.
 
-Comparamos cinco formas de estimar la experiencia sobre exactamente la misma partición:
-- una mediana;
-- TF-IDF + Ridge;
-- sentence embeddings + Ridge;
-- DistilBERT ajustado como regresor;
-- como bonus, una regla que suma las fechas.
-
-**Resultado en una línea:** BERT reduce el error de TF-IDF de 0.98 a **0.16 años**, una mejora
-estadísticamente significativa. Pero una regla de 40 líneas que suma los periodos llega a
-**0.02 años**. Además, la prueba de las fechas muestra que BERT aprendió un atajo propio de
-este dataset.
+**Resumen de resultados (test):** BERT reduce el error medio de TF-IDF de 0.98 a **0.16
+años**, una mejora estadísticamente significativa. La regla que suma los periodos llega a
+**0.02 años**. La prueba de fechas de la Pregunta 1 muestra además que BERT aprendió a usar
+2023 como fecha de referencia fija, una regularidad propia de este dataset.
 
 ## 2. Muestreo de CVs y distribución de la experiencia
 **Dataset:** [PopResume](https://huggingface.co/datasets/sumin-yu/PopResume) (Yu, Park & Moon,
@@ -191,8 +202,9 @@ con frases de ejemplo y se leyeron **50 CVs al azar**
 ([output/tables/review_sample_50.txt](output/tables/review_sample_50.txt)). **Ningún CV contiene
 estas frases: 0 CVs enmascarados.** La plantilla de PopResume no tiene sección de resumen.
 
-**Hallazgo de la lectura manual.** `exp_year` coincide con la **suma de la duración de los
-trabajos**, sin contar los periodos entre trabajos. Por ejemplo:
+**Relación entre `exp_year` y las fechas.** En la lectura manual se observó que `exp_year`
+coincide con la **suma de la duración de los trabajos**, sin contar los periodos entre
+trabajos. Por ejemplo:
 - 2020.01–2023.01 + 2015.03–2018.03 = 6.0 años, y `exp_year` = 6.00;
 - un CV con un hueco entre 2009 y 2012 suma 4 × 3.5 = 14.04 años.
 
@@ -452,7 +464,7 @@ Por eso ambos comprimen las predicciones hacia la media y fallan más en los ext
 
 ![Prueba de fechas](output/figures/q1_probe.png)
 
-**Qué nos dice:**
+**Interpretación:**
 - **Al borrar un trabajo, BERT reacciona como un reclutador:** resta casi exactamente su
   duración (desviación media de 0.17 años). TF-IDF apenas se mueve (−0.77), porque para él
   borrar un trabajo es perder unas cuantas palabras. BERT **sí lee las fechas**.
@@ -571,7 +583,7 @@ con IC 95 % por bootstrap:
 
 ![Equidad](output/figures/fairness_bert.png)
 
-**Cómo leerlo:**
+**Interpretación:**
 - **BERT sobrestima levemente a todos los grupos,** en +0.04 a +0.09 años (2 a 5 semanas).
 - **Por sexo no hay diferencia:** +0.050 frente a +0.048.
 - **Por raza,** el error medio es algo mayor para los grupos Asian/Pacific Islander y Black,
@@ -630,7 +642,7 @@ de los modelos no se suben a GitHub; se regeneran con los scripts de `src/`.
 1. Crear una cuenta en Hugging Face, abrir la página del dataset
    [sumin-yu/PopResume](https://huggingface.co/datasets/sumin-yu/PopResume) y aceptar
    sus condiciones de acceso.
-2. Crear un token de acceso (lectura) y guardarlo en Colab → 🔑 *Secrets* con el nombre
+2. Crear un token de acceso (lectura) y guardarlo en Colab → *Secrets* con el nombre
    `HF_TOKEN`.
 3. Abrir el notebook en Colab y elegir *Runtime → T4 GPU*. La celda de configuración monta
    Google Drive y define `CV_STORAGE_DIR`, así que `data/`, `models/` y `output/` se guardan
@@ -684,3 +696,74 @@ streamlit run app.py
 ```
 Las pestañas 1–3 funcionan solo con lo que está en GitHub. La pestaña 4 necesita los modelos
 en `models/` (se regeneran con los pasos 6–7 de la sección 12) y PaddleOCR instalado.
+
+## 14. Estructura del repositorio y dónde están los resultados
+```
+cv_experience_ocr_bert/
+├── app.py                     App de Streamlit (4 pestañas)
+├── README.md                  Este documento
+├── requirements.txt           Versiones fijadas (PaddlePaddle se instala aparte, ver el archivo)
+├── notebooks/
+│   └── colab_pipeline.ipynb   Ejecuta todo el pipeline en Google Colab, fase por fase
+├── src/                       Código del pipeline (cada script acepta --help)
+├── data/
+│   ├── raw/sampled_ids.csv    IDs de los 4,000 CVs sorteados (imágenes y metadata: no se suben)
+│   ├── ocr/                   JSON de PaddleOCR por CV (no se suben; se regeneran)
+│   ├── processed/cvs.csv      Texto limpio de cada CV, target y versiones para la Pregunta 3
+│   └── splits/                train.csv, val.csv, test.csv (IDs + target)
+├── models/                    Pesos de los baselines y de BERT (no se suben; se regeneran)
+├── output/
+│   ├── figures/               Todas las figuras del README y de la app
+│   ├── tables/                Tablas de resultados (CSV)
+│   └── metrics/               Resúmenes JSON, predicciones de cada modelo y tiempos
+└── video/link.txt             Enlace al video
+```
+
+**Código (`src/`):**
+
+| Archivo | Qué hace |
+|---|---|
+| [utils.py](src/utils.py) | Rutas, semilla, tope de 20 años, bandas de experiencia y carga de la partición |
+| [download_data.py](src/download_data.py) | Muestreo estratificado de PopResume (sin foto, semilla 42), descarga de imágenes y del texto de referencia |
+| [ocr_extraction.py](src/ocr_extraction.py) | PaddleOCR por imagen, caché en JSON, orden de lectura (incluye dos columnas) y tiempos |
+| [ocr_quality.py](src/ocr_quality.py) | CER/WER frente al texto de referencia, años y rangos de fechas leídos correctamente |
+| [preprocessing.py](src/preprocessing.py) | Limpieza, reparación de fechas, eliminación de datos personales y enmascarado |
+| [split.py](src/split.py) | Partición 70/15/15 estratificada por ocupación × banda |
+| [baseline_median.py](src/baseline_median.py) | Baseline 0: mediana de entrenamiento |
+| [baseline_tfidf.py](src/baseline_tfidf.py) | Baseline 1: TF-IDF + Ridge (con o sin dígitos) |
+| [baseline_embeddings.py](src/baseline_embeddings.py) | Baseline 2: MiniLM congelado + Ridge, con *chunking* para textos largos |
+| [baseline_rules.py](src/baseline_rules.py) | Bonus: suma de los periodos de trabajo extraídos con regex |
+| [train_bert.py](src/train_bert.py) | Ajuste de DistilBERT como regresor (MSE o Huber, *early stopping*) |
+| [evaluation.py](src/evaluation.py) | Métricas, bootstrap pareado, tablas finales y Preguntas 2–4 |
+| [probe.py](src/probe.py) | Prueba de fechas de la Pregunta 1 |
+| [predict.py](src/predict.py) | Carga los modelos entrenados para predecir sobre texto nuevo (prueba y app) |
+| [visualization.py](src/visualization.py) | Genera todas las figuras |
+
+**Resultados (`output/`):**
+
+| Qué buscar | Archivo |
+|---|---|
+| Tabla comparativa final (test) | [tables/model_comparison.csv](output/tables/model_comparison.csv) |
+| Tabla comparativa en validación (todas las variantes) | [tables/model_comparison_val.csv](output/tables/model_comparison_val.csv) |
+| Ganancia de BERT con IC 95 % | [tables/bert_gain_bootstrap.csv](output/tables/bert_gain_bootstrap.csv), [figures/bert_gain_ci.png](output/figures/bert_gain_ci.png) |
+| Predicho vs real | [figures/pred_vs_true_all.png](output/figures/pred_vs_true_all.png) y `figures/pred_vs_true_<modelo>.png` |
+| MAE por banda y por ocupación | [tables/mae_by_band.csv](output/tables/mae_by_band.csv), [tables/mae_by_occupation.csv](output/tables/mae_by_occupation.csv) y sus figuras |
+| Matrices de confusión por bandas | `tables/band_confusion_<modelo>.csv`, `figures/confusion_<modelo>.png` |
+| 10 mayores errores de BERT | [tables/bert_top10_errors.csv](output/tables/bert_top10_errors.csv) |
+| Pregunta 1 (prueba de fechas) | [tables/q1_probe_summary.csv](output/tables/q1_probe_summary.csv), [tables/q1_probe_detail.csv](output/tables/q1_probe_detail.csv), [figures/q1_probe.png](output/figures/q1_probe.png) |
+| Pregunta 2 (OCR vs referencia) | [tables/q2_ocr_vs_reference.csv](output/tables/q2_ocr_vs_reference.csv) |
+| Pregunta 3 (sensibilidad) | [tables/q3_sensitivity.csv](output/tables/q3_sensitivity.csv) |
+| Pregunta 4 (equidad) | [tables/q4_fairness_sex.csv](output/tables/q4_fairness_sex.csv), [tables/q4_fairness_race.csv](output/tables/q4_fairness_race.csv), [figures/fairness_bert.png](output/figures/fairness_bert.png) |
+| Distribución del target | [tables/target_distribution.csv](output/tables/target_distribution.csv), [figures/target_distribution.png](output/figures/target_distribution.png) |
+| Calidad del OCR | [tables/ocr_quality_by_occupation.csv](output/tables/ocr_quality_by_occupation.csv), [tables/ocr_quality_per_cv.csv](output/tables/ocr_quality_per_cv.csv), [tables/ocr_top_word_errors.csv](output/tables/ocr_top_word_errors.csv), [figures/ocr_quality.png](output/figures/ocr_quality.png) |
+| Lectura manual de 50 CVs (enmascarado) | [tables/review_sample_50.txt](output/tables/review_sample_50.txt) |
+| Búsqueda de hiperparámetros de los baselines | `tables/grid_<modelo>.csv` |
+| Variables más influyentes de TF-IDF | `tables/top_features_<modelo>.csv` |
+| Resúmenes de cada etapa | `metrics/sampling_summary.json`, `ocr_summary*.json`, `ocr_quality_summary.json`, `preprocessing_summary.json`, `split_summary.json` |
+| Historial de entrenamiento de BERT (MAE por época) | `metrics/bert_log_<variante>.json` |
+| Predicciones por CV de cada modelo (val, test y test con texto de referencia) | `metrics/predictions/<modelo>.csv` |
+| Tiempos e hiperparámetros de cada modelo | `metrics/timing/<modelo>.json` |
+
+Nombres de las variantes: `<modelo>__text_raw` y `<modelo>__text_clean_conf` son las versiones
+del texto de la Pregunta 3; `tfidf_nodigits` es TF-IDF sin dígitos; `bert_huber` es BERT con
+pérdida Huber; y `bert_lr<valor>` son las corridas de la búsqueda del learning rate.

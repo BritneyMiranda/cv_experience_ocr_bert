@@ -1,4 +1,4 @@
-# HW_04_202602-191 · cv_experience_ocr_bert
+# cv_experience_ocr_bert
 
 Predicción de los **años de experiencia laboral (0–20)** a partir de imágenes de CVs: el texto
 se extrae con **PaddleOCR** y se estima la experiencia con un modelo **BERT** ajustado como
@@ -699,7 +699,7 @@ en `models/` (se regeneran con los pasos 6–7 de la sección 12) y PaddleOCR in
 
 ## 14. Estructura del repositorio y dónde están los resultados
 ```
-HW_04_202602-191/
+cv_experience_ocr_bert/
 ├── app.py                     App de Streamlit (4 pestañas)
 ├── README.md                  Este documento
 ├── requirements.txt           Versiones fijadas (PaddlePaddle se instala aparte, ver el archivo)

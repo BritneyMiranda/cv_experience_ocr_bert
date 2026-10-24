@@ -1,0 +1,34 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Datos pesados (se regeneran con src/download_data.py y src/ocr_extraction.py)
+data/raw/*
+!data/raw/.gitkeep
+!data/raw/sampled_ids.csv
+data/ocr/*
+!data/ocr/.gitkeep
+*.png
+*.jpg
+*.jpeg
+*.parquet
+
+# Pesos de modelos (se regeneran con los scripts de entrenamiento)
+models/**/*
+!models/**/.gitkeep
+*.safetensors
+*.bin
+*.pt
+*.joblib
+*.pkl
+
+# Secretos
+.env
+*.token
+
+# Sistema
+.DS_Store
+Thumbs.db

@@ -23,7 +23,9 @@ Uso:
 import argparse
 import math
 import shutil
+import tempfile
 import time
+from pathlib import Path
 
 import numpy as np
 import torch
@@ -95,8 +97,12 @@ def main() -> None:
 
     # Warmup del 10 % de los pasos (warmup_ratio ya no existe en transformers recientes)
     warmup_steps = int(0.1 * math.ceil(len(train_ds) / args.batch_size) * args.epochs)
+    # Checkpoints en el disco local (no en Drive: lo borrado en Drive va a la papelera y
+    # sigue ocupando cuota) y sin estado del optimizador. Solo el mejor modelo va a out_dir.
+    ckpt_dir = Path(tempfile.gettempdir()) / "bert_checkpoints" / name
     training_args = TrainingArguments(
-        output_dir=str(out_dir / "checkpoints"),
+        output_dir=str(ckpt_dir),
+        save_only_model=True,
         learning_rate=args.lr,
         per_device_train_batch_size=args.batch_size,
         per_device_eval_batch_size=64,
@@ -129,7 +135,7 @@ def main() -> None:
     tokenizer.save_pretrained(str(out_dir))
     save_json(trainer.state.log_history, METRICS_DIR / f"bert_log_{name}.json")
     best_checkpoint = trainer.state.best_model_checkpoint
-    shutil.rmtree(out_dir / "checkpoints", ignore_errors=True)  # el mejor ya está en out_dir
+    shutil.rmtree(ckpt_dir, ignore_errors=True)  # el mejor ya está en out_dir
 
     device = model.device
     model.eval()

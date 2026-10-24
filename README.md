@@ -662,4 +662,25 @@ de los modelos no se suben a GitHub; se regeneran con los scripts de `src/`.
   índice; el comando está al inicio de ese archivo.
 
 ## 13. Cómo ejecutar la app de Streamlit
-_Pendiente (Fase 7)._
+[app.py](app.py) tiene **4 pestañas**:
+
+| Pestaña | Qué muestra |
+|---|---|
+| **Problema y metodología** | Objetivo, por qué la experiencia es difícil de leer, datos, muestreo, target, regla de enmascarado, OCR y orden de lectura, modelos, partición y limitaciones |
+| **OCR y exploración** | Distribución de los años (con el tope), calidad del OCR (CER/WER y años leídos), un CV con las cajas de PaddleOCR junto a su texto |
+| **Resultados de los modelos** | Tabla comparativa, predicho vs real por modelo, MAE por banda y ocupación, matrices de confusión, ganancia de BERT con IC, Preguntas 1–4 |
+| **Estimador interactivo** | Subir un CV (imagen o PDF): OCR, texto y predicción de todos los modelos; explorar los CVs de test por ocupación, años y error; ejemplos de predicciones buenas y malas |
+
+**En Google Colab** (recomendado: los modelos y las imágenes ya están en Drive):
+1. Ejecuta la configuración, Drive/Git y la instalación de PaddleOCR (Fase 2).
+2. Ejecuta la celda de la **Fase 7**: inicia Streamlit y abre la app con el proxy de Colab,
+   que es accesible solo con tu sesión de Google.
+
+**En local:**
+```bash
+pip install -r requirements.txt        # PaddlePaddle antes, desde su índice (ver el archivo)
+# copiar models/ (y opcionalmente data/raw/images y data/ocr) desde Drive al repositorio
+streamlit run app.py
+```
+Las pestañas 1–3 funcionan solo con lo que está en GitHub. La pestaña 4 necesita los modelos
+en `models/` (se regeneran con los pasos 6–7 de la sección 12) y PaddleOCR instalado.

@@ -92,6 +92,8 @@ def sample_occupation(occupation: str, n: int, seed: int, buffer_size: int) -> p
             print(f"[{occupation}] ya descargada ({n} CVs), se reutiliza.")
             return cached
 
+    print(f"[{occupation}] llenando el buffer de mezcla ({buffer_size} CVs sin foto); "
+          "puede tardar varios minutos antes del primer avance...")
     rows, n_duplicates, t0 = [], 0, time.time()
     seen = set()
     for r in stream_occupation(occupation, seed, buffer_size):

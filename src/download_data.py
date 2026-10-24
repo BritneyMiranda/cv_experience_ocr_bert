@@ -5,6 +5,9 @@ sin foto, se barajan con semilla fija y se guardan los primeros N como PNG. Lueg
 descarga la configuración `text` y se conserva solo el texto de referencia de los CVs
 muestreados (se usa únicamente para medir la calidad del OCR, nunca como feature).
 
+El `id` de PopResume es un correlativo que se repite entre ocupaciones, por eso la
+clave del proyecto es `cv_id = "<job>_<id>"`.
+
 Uso:
     python -m src.download_data --inspect        # ver shards, ocupaciones y columnas
     python -m src.download_data                  # muestreo completo (800 por ocupación)
@@ -20,13 +23,17 @@ from datasets import load_dataset
 from huggingface_hub import HfFileSystem
 from PIL import Image
 
-from src.utils import (EXP_CAP, HF_DATASET, METADATA_CSV, METRICS_DIR,
+from src.utils import (EXP_CAP, HF_DATASET, ID_COL, METADATA_CSV, METRICS_DIR,
                        N_PER_OCCUPATION, RAW_DIR, RAW_IMG_DIR, REFERENCE_TEXT_CSV,
                        SAMPLED_IDS_CSV, SEED, TABLE_DIR, TARGET, clip_years,
                        ensure_dirs, save_json)
 
 IMAGES_GLOB = f"datasets/{HF_DATASET}/data/images/*.parquet"
 CAP_WARNING_SHARE = 0.15
+
+
+def make_cv_id(row) -> str:
+    return f"{row['job']}_{row['id']}"
 
 
 def list_occupations() -> list[str]:
@@ -73,64 +80,59 @@ def inspect() -> None:
         print(f"  {k}: {repr(v)[:120]}")
 
 
-def sample_occupation(occupation: str, n: int, seed: int, buffer_size: int,
-                      id_col: str) -> pd.DataFrame:
-    """Guarda n imágenes de una ocupación y devuelve su metadata (sin la imagen).
+def sample_occupation(occupation: str, n: int, seed: int, buffer_size: int) -> pd.DataFrame:
+    """Guarda n imágenes únicas de una ocupación y devuelve su metadata (sin la imagen).
 
     Si la ocupación ya fue descargada completa, reutiliza su CSV (permite reanudar).
     """
     occ_csv = RAW_DIR / f"metadata_{occupation}.csv"
     if occ_csv.exists():
-        cached = pd.read_csv(occ_csv, dtype={id_col: str})
-        if len(cached) == n and all((RAW_IMG_DIR / f"{i}.png").exists() for i in cached[id_col]):
+        cached = pd.read_csv(occ_csv, dtype={ID_COL: str, "id": str})
+        if len(cached) == n and all((RAW_IMG_DIR / f"{i}.png").exists() for i in cached[ID_COL]):
             print(f"[{occupation}] ya descargada ({n} CVs), se reutiliza.")
             return cached
 
-    rows, t0 = [], time.time()
-    for r in stream_occupation(occupation, seed, buffer_size).take(n):
-        if id_col not in r:
-            raise KeyError(f"No existe la columna '{id_col}'. Columnas: {list(r)}")
-        to_pil(r["image"]).convert("RGB").save(RAW_IMG_DIR / f"{r[id_col]}.png")
+    rows, n_duplicates, t0 = [], 0, time.time()
+    seen = set()
+    for r in stream_occupation(occupation, seed, buffer_size):
+        cv_id = make_cv_id(r)
+        if cv_id in seen:  # otra variante de imagen del mismo CV
+            n_duplicates += 1
+            continue
+        seen.add(cv_id)
+        to_pil(r["image"]).convert("RGB").save(RAW_IMG_DIR / f"{cv_id}.png")
         meta = {k: v for k, v in r.items() if k != "image"}
-        if "occupation" in meta:
-            meta["occupation_hf"] = meta.pop("occupation")
-        meta["occupation"] = occupation
-        rows.append(meta)
+        rows.append({ID_COL: cv_id, "occupation": occupation, **meta})
         if len(rows) % 100 == 0:
             print(f"[{occupation}] {len(rows)}/{n} ({time.time() - t0:.0f} s)")
+        if len(rows) == n:
+            break
 
     if len(rows) < n:
         print(f"[{occupation}] AVISO: solo había {len(rows)} CVs sin foto.")
+    if n_duplicates:
+        print(f"[{occupation}] {n_duplicates} imágenes duplicadas del mismo CV descartadas.")
     df = pd.DataFrame(rows)
     df.to_csv(occ_csv, index=False)
     return df
 
 
-def attach_reference_text(meta: pd.DataFrame, id_col: str, text_col: str) -> pd.DataFrame:
-    """Guarda id + texto de referencia de los CVs muestreados.
-
-    Si alguna columna (p. ej. exp_year, sex, race) existe solo en la config text,
-    se agrega a la metadata. El texto nunca entra a metadata.csv.
-    """
+def save_reference_text(meta: pd.DataFrame) -> None:
+    """Guarda cv_id + texto de referencia de los CVs muestreados (solo para CER/WER)."""
     text_ds = load_dataset(HF_DATASET, "text")
     text_ds = text_ds[next(iter(text_ds))]
-    wanted = set(meta[id_col].astype(str))
-    text_df = (text_ds.filter(lambda r: str(r[id_col]) in wanted)
+    wanted = set(meta[ID_COL])
+    text_df = (text_ds.select_columns(["id", "job", "text"])
+               .filter(lambda r: make_cv_id(r) in wanted)
                .to_pandas())
-    text_df[id_col] = text_df[id_col].astype(str)
+    text_df[ID_COL] = text_df["job"] + "_" + text_df["id"]
+    text_df = text_df.drop_duplicates(ID_COL)
 
-    missing = wanted - set(text_df[id_col])
+    missing = wanted - set(text_df[ID_COL])
     if missing:
         print(f"AVISO: {len(missing)} CVs sin texto de referencia.")
-    text_df[[id_col, text_col]].to_csv(REFERENCE_TEXT_CSV, index=False)
-
-    extra = [c for c in text_df.columns if c not in meta.columns and c not in (text_col, "image")]
-    meta = meta.copy()
-    meta[id_col] = meta[id_col].astype(str)
-    if extra:
-        print(f"Columnas añadidas desde la config text: {extra}")
-        meta = meta.merge(text_df[[id_col] + extra], on=id_col, how="left")
-    return meta
+    text_df[[ID_COL, "text"]].to_csv(REFERENCE_TEXT_CSV, index=False)
+    print(f"Texto de referencia de {len(text_df)} CVs en {REFERENCE_TEXT_CSV}")
 
 
 def summarize_target(meta: pd.DataFrame) -> dict:
@@ -162,7 +164,7 @@ def summarize_target(meta: pd.DataFrame) -> dict:
         "n_above_cap_clipped": int((raw > EXP_CAP).sum()),
         "cap_rule_triggered": share > CAP_WARNING_SHARE,
     }
-    msg = (f"{summary['n_at_or_above_cap']} CVs ({share:.1%}) quedan en el tope de {EXP_CAP} años.")
+    msg = f"{summary['n_at_or_above_cap']} CVs ({share:.1%}) quedan en el tope de {EXP_CAP} años."
     if summary["cap_rule_triggered"]:
         msg += " Supera el 15 %: evaluar subir el tope a 25 o 30 y justificarlo."
     print("\n" + msg)
@@ -177,8 +179,6 @@ def main() -> None:
     parser.add_argument("--seed", type=int, default=SEED)
     parser.add_argument("--buffer-size", type=int, default=5000)
     parser.add_argument("--occupations", nargs="*", help="por defecto, todas las del dataset")
-    parser.add_argument("--id-col", default="id")
-    parser.add_argument("--text-col", default="text")
     args = parser.parse_args()
 
     if args.inspect:
@@ -190,14 +190,14 @@ def main() -> None:
     print(f"Ocupaciones: {occupations}")
 
     t0 = time.time()
-    parts = [sample_occupation(o, args.n_per_occ, args.seed, args.buffer_size, args.id_col)
+    parts = [sample_occupation(o, args.n_per_occ, args.seed, args.buffer_size)
              for o in occupations]
     meta = pd.concat(parts, ignore_index=True)
-    meta = attach_reference_text(meta, args.id_col, args.text_col)
     meta[f"{TARGET}_capped"] = clip_years(meta[TARGET])
-
     meta.to_csv(METADATA_CSV, index=False)
-    meta[[args.id_col, "occupation"]].to_csv(SAMPLED_IDS_CSV, index=False)
+    meta[[ID_COL, "id", "occupation", "file_name"]].to_csv(SAMPLED_IDS_CSV, index=False)
+
+    save_reference_text(meta)
 
     summary = summarize_target(meta)
     summary.update({

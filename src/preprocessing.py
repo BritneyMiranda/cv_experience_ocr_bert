@@ -131,6 +131,17 @@ def process_cv(text: str, meta: pd.Series) -> tuple[str, dict, dict]:
     return text, pii, masked
 
 
+def prepare_text(ocr_text: str) -> str:
+    """Limpieza para un CV nuevo (app): sin metadata no conocemos el nombre, así que se
+    descarta todo el encabezado anterior a la primera sección (nombre y contacto)."""
+    text, _ = remove_pii(ocr_text, None, None)
+    first_section = SECTION_RE.search(text)
+    if first_section:
+        text = text[first_section.start():]
+    text, _ = mask_direct_answers(text)
+    return clean_text(text)[0]
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)

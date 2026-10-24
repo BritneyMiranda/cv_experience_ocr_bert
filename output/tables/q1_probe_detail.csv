@@ -1,0 +1,301 @@
+model,change,cv_id,delta_pred,delta_expected
+Median,shift_+5,elementary_middle_school_teachers_29308,0.0,0.0
+Median,shift_+5,accountants_auditors_17089,0.0,0.0
+Median,shift_+5,accountants_auditors_24629,0.0,0.0
+Median,shift_+5,elementary_middle_school_teachers_27832,0.0,0.0
+Median,shift_+5,construction_laborers_25119,0.0,0.0
+Median,shift_+5,elementary_middle_school_teachers_15121,0.0,0.0
+Median,shift_+5,software_developers_16086,0.0,0.0
+Median,shift_+5,elementary_middle_school_teachers_19976,0.0,0.0
+Median,shift_+5,software_developers_57875,0.0,0.0
+Median,shift_+5,accountants_auditors_47120,0.0,0.0
+Median,shift_+5,software_developers_57192,0.0,0.0
+Median,shift_+5,software_developers_12407,0.0,0.0
+Median,shift_+5,accountants_auditors_46125,0.0,0.0
+Median,shift_+5,software_developers_50552,0.0,0.0
+Median,shift_+5,registered_nurses_01097,0.0,0.0
+Median,shift_+5,software_developers_04973,0.0,0.0
+Median,shift_+5,accountants_auditors_44358,0.0,0.0
+Median,shift_+5,accountants_auditors_57065,0.0,0.0
+Median,shift_+5,construction_laborers_46076,0.0,0.0
+Median,shift_+5,accountants_auditors_00344,0.0,0.0
+Median,shift_-5,elementary_middle_school_teachers_29308,0.0,0.0
+Median,shift_-5,accountants_auditors_17089,0.0,0.0
+Median,shift_-5,accountants_auditors_24629,0.0,0.0
+Median,shift_-5,elementary_middle_school_teachers_27832,0.0,0.0
+Median,shift_-5,construction_laborers_25119,0.0,0.0
+Median,shift_-5,elementary_middle_school_teachers_15121,0.0,0.0
+Median,shift_-5,software_developers_16086,0.0,0.0
+Median,shift_-5,elementary_middle_school_teachers_19976,0.0,0.0
+Median,shift_-5,software_developers_57875,0.0,0.0
+Median,shift_-5,accountants_auditors_47120,0.0,0.0
+Median,shift_-5,software_developers_57192,0.0,0.0
+Median,shift_-5,software_developers_12407,0.0,0.0
+Median,shift_-5,accountants_auditors_46125,0.0,0.0
+Median,shift_-5,software_developers_50552,0.0,0.0
+Median,shift_-5,registered_nurses_01097,0.0,0.0
+Median,shift_-5,software_developers_04973,0.0,0.0
+Median,shift_-5,accountants_auditors_44358,0.0,0.0
+Median,shift_-5,accountants_auditors_57065,0.0,0.0
+Median,shift_-5,construction_laborers_46076,0.0,0.0
+Median,shift_-5,accountants_auditors_00344,0.0,0.0
+Median,delete_job,elementary_middle_school_teachers_29308,0.0,-3.0000000000000004
+Median,delete_job,accountants_auditors_17089,0.0,-1.8333333333333335
+Median,delete_job,accountants_auditors_24629,0.0,-2.25
+Median,delete_job,elementary_middle_school_teachers_27832,0.0,-2.583333333333334
+Median,delete_job,construction_laborers_25119,0.0,-3.083333333333332
+Median,delete_job,elementary_middle_school_teachers_15121,0.0,-2.416666666666666
+Median,delete_job,software_developers_16086,0.0,-2.1666666666666665
+Median,delete_job,elementary_middle_school_teachers_19976,0.0,-2.583333333333334
+Median,delete_job,software_developers_57875,0.0,-2.75
+Median,delete_job,accountants_auditors_47120,0.0,-1.5833333333333333
+Median,delete_job,software_developers_57192,0.0,-2.166666666666667
+Median,delete_job,software_developers_12407,0.0,-2.5
+Median,delete_job,accountants_auditors_46125,0.0,-2.833333333333334
+Median,delete_job,software_developers_50552,0.0,-2.666666666666667
+Median,delete_job,registered_nurses_01097,0.0,-1.9166666666666667
+Median,delete_job,software_developers_04973,0.0,-2.25
+Median,delete_job,accountants_auditors_44358,0.0,-1.5
+Median,delete_job,accountants_auditors_57065,0.0,-2.833333333333333
+Median,delete_job,construction_laborers_46076,0.0,-3.916666666666666
+Median,delete_job,accountants_auditors_00344,0.0,-4.083333333333332
+TF-IDF + Ridge,shift_+5,elementary_middle_school_teachers_29308,-0.45976678358449163,0.0
+TF-IDF + Ridge,shift_+5,accountants_auditors_17089,3.535245759695086,0.0
+TF-IDF + Ridge,shift_+5,accountants_auditors_24629,1.2837432070632167,0.0
+TF-IDF + Ridge,shift_+5,elementary_middle_school_teachers_27832,-2.082041218937837,0.0
+TF-IDF + Ridge,shift_+5,construction_laborers_25119,-2.245014177829848,0.0
+TF-IDF + Ridge,shift_+5,elementary_middle_school_teachers_15121,-0.3552428420128084,0.0
+TF-IDF + Ridge,shift_+5,software_developers_16086,0.4911314846796655,0.0
+TF-IDF + Ridge,shift_+5,elementary_middle_school_teachers_19976,-1.2644981712436625,0.0
+TF-IDF + Ridge,shift_+5,software_developers_57875,-2.5806263023657445,0.0
+TF-IDF + Ridge,shift_+5,accountants_auditors_47120,3.831092039426662,0.0
+TF-IDF + Ridge,shift_+5,software_developers_57192,0.2867667142876513,0.0
+TF-IDF + Ridge,shift_+5,software_developers_12407,-0.6911380930640592,0.0
+TF-IDF + Ridge,shift_+5,accountants_auditors_46125,-2.766407549679899,0.0
+TF-IDF + Ridge,shift_+5,software_developers_50552,-1.1268007867947212,0.0
+TF-IDF + Ridge,shift_+5,registered_nurses_01097,2.2154976703124962,0.0
+TF-IDF + Ridge,shift_+5,software_developers_04973,-0.4177488453194531,0.0
+TF-IDF + Ridge,shift_+5,accountants_auditors_44358,2.9550498196000206,0.0
+TF-IDF + Ridge,shift_+5,accountants_auditors_57065,-1.2997904578791575,0.0
+TF-IDF + Ridge,shift_+5,construction_laborers_46076,-3.4811759614159357,0.0
+TF-IDF + Ridge,shift_+5,accountants_auditors_00344,-3.4220917315317774,0.0
+TF-IDF + Ridge,shift_-5,elementary_middle_school_teachers_29308,1.2288055761381766,0.0
+TF-IDF + Ridge,shift_-5,accountants_auditors_17089,3.1981926269233094,0.0
+TF-IDF + Ridge,shift_-5,accountants_auditors_24629,4.487420440721112,0.0
+TF-IDF + Ridge,shift_-5,elementary_middle_school_teachers_27832,4.2170197343221645,0.0
+TF-IDF + Ridge,shift_-5,construction_laborers_25119,0.016133900295070447,0.0
+TF-IDF + Ridge,shift_-5,elementary_middle_school_teachers_15121,4.007213942201426,0.0
+TF-IDF + Ridge,shift_-5,software_developers_16086,3.448827474704845,0.0
+TF-IDF + Ridge,shift_-5,elementary_middle_school_teachers_19976,3.018277688917461,0.0
+TF-IDF + Ridge,shift_-5,software_developers_57875,4.280192322897131,0.0
+TF-IDF + Ridge,shift_-5,accountants_auditors_47120,3.7413618604046244,0.0
+TF-IDF + Ridge,shift_-5,software_developers_57192,4.325234134378176,0.0
+TF-IDF + Ridge,shift_-5,software_developers_12407,3.289270386083956,0.0
+TF-IDF + Ridge,shift_-5,accountants_auditors_46125,1.984074663921298,0.0
+TF-IDF + Ridge,shift_-5,software_developers_50552,3.6492683041639147,0.0
+TF-IDF + Ridge,shift_-5,registered_nurses_01097,2.69193689815053,0.0
+TF-IDF + Ridge,shift_-5,software_developers_04973,3.72460944135287,0.0
+TF-IDF + Ridge,shift_-5,accountants_auditors_44358,3.7902587350847634,0.0
+TF-IDF + Ridge,shift_-5,accountants_auditors_57065,3.8266614629196694,0.0
+TF-IDF + Ridge,shift_-5,construction_laborers_46076,-0.6502419744939036,0.0
+TF-IDF + Ridge,shift_-5,accountants_auditors_00344,0.08681867581593394,0.0
+TF-IDF + Ridge,delete_job,elementary_middle_school_teachers_29308,-0.9274398996670881,-3.0000000000000004
+TF-IDF + Ridge,delete_job,accountants_auditors_17089,0.7211401206762265,-1.8333333333333335
+TF-IDF + Ridge,delete_job,accountants_auditors_24629,0.4267075838441814,-2.25
+TF-IDF + Ridge,delete_job,elementary_middle_school_teachers_27832,-1.0237331171549497,-2.583333333333334
+TF-IDF + Ridge,delete_job,construction_laborers_25119,-0.7412624784650568,-3.083333333333332
+TF-IDF + Ridge,delete_job,elementary_middle_school_teachers_15121,-1.0903063868702842,-2.416666666666666
+TF-IDF + Ridge,delete_job,software_developers_16086,0.291036500278107,-2.1666666666666665
+TF-IDF + Ridge,delete_job,elementary_middle_school_teachers_19976,-1.4476488656554274,-2.583333333333334
+TF-IDF + Ridge,delete_job,software_developers_57875,-1.0888627551764145,-2.75
+TF-IDF + Ridge,delete_job,accountants_auditors_47120,-0.4963903543876489,-1.5833333333333333
+TF-IDF + Ridge,delete_job,software_developers_57192,-2.2235865096525806,-2.166666666666667
+TF-IDF + Ridge,delete_job,software_developers_12407,-1.2469758486838947,-2.5
+TF-IDF + Ridge,delete_job,accountants_auditors_46125,-2.452156359109045,-2.833333333333334
+TF-IDF + Ridge,delete_job,software_developers_50552,-0.5859225140739506,-2.666666666666667
+TF-IDF + Ridge,delete_job,registered_nurses_01097,0.09250261849891128,-1.9166666666666667
+TF-IDF + Ridge,delete_job,software_developers_04973,-1.0803789491758966,-2.25
+TF-IDF + Ridge,delete_job,accountants_auditors_44358,0.8980580031129097,-1.5
+TF-IDF + Ridge,delete_job,accountants_auditors_57065,-0.9887535455122025,-2.833333333333333
+TF-IDF + Ridge,delete_job,construction_laborers_46076,-1.5559647723416568,-3.916666666666666
+TF-IDF + Ridge,delete_job,accountants_auditors_00344,-0.916637108991825,-4.083333333333332
+Embeddings + Ridge,shift_+5,elementary_middle_school_teachers_29308,0.917815589566751,0.0
+Embeddings + Ridge,shift_+5,accountants_auditors_17089,4.576100052164892,0.0
+Embeddings + Ridge,shift_+5,accountants_auditors_24629,2.0872998423448994,0.0
+Embeddings + Ridge,shift_+5,elementary_middle_school_teachers_27832,-1.2144836906562926,0.0
+Embeddings + Ridge,shift_+5,construction_laborers_25119,-0.40907748335289185,0.0
+Embeddings + Ridge,shift_+5,elementary_middle_school_teachers_15121,0.44184257914610114,0.0
+Embeddings + Ridge,shift_+5,software_developers_16086,0.27216412957868386,0.0
+Embeddings + Ridge,shift_+5,elementary_middle_school_teachers_19976,0.04247813085068408,0.0
+Embeddings + Ridge,shift_+5,software_developers_57875,-0.42719967741032683,0.0
+Embeddings + Ridge,shift_+5,accountants_auditors_47120,4.417682034296995,0.0
+Embeddings + Ridge,shift_+5,software_developers_57192,-0.6586468304133124,0.0
+Embeddings + Ridge,shift_+5,software_developers_12407,-0.1972249185471462,0.0
+Embeddings + Ridge,shift_+5,accountants_auditors_46125,-0.5114580852310162,0.0
+Embeddings + Ridge,shift_+5,software_developers_50552,-0.29305077237680877,0.0
+Embeddings + Ridge,shift_+5,registered_nurses_01097,2.6110656878671437,0.0
+Embeddings + Ridge,shift_+5,software_developers_04973,-0.13787462063069267,0.0
+Embeddings + Ridge,shift_+5,accountants_auditors_44358,2.675191745276969,0.0
+Embeddings + Ridge,shift_+5,accountants_auditors_57065,1.2720265443457155,0.0
+Embeddings + Ridge,shift_+5,construction_laborers_46076,-0.3839675885714229,0.0
+Embeddings + Ridge,shift_+5,accountants_auditors_00344,-0.6868033808117833,0.0
+Embeddings + Ridge,shift_-5,elementary_middle_school_teachers_29308,3.142502941447659,0.0
+Embeddings + Ridge,shift_-5,accountants_auditors_17089,2.6039463878322326,0.0
+Embeddings + Ridge,shift_-5,accountants_auditors_24629,2.461968208911559,0.0
+Embeddings + Ridge,shift_-5,elementary_middle_school_teachers_27832,2.045645366469879,0.0
+Embeddings + Ridge,shift_-5,construction_laborers_25119,0.22807220394908256,0.0
+Embeddings + Ridge,shift_-5,elementary_middle_school_teachers_15121,2.2774546360190193,0.0
+Embeddings + Ridge,shift_-5,software_developers_16086,0.717745527358268,0.0
+Embeddings + Ridge,shift_-5,elementary_middle_school_teachers_19976,1.7596843140596352,0.0
+Embeddings + Ridge,shift_-5,software_developers_57875,1.0049245718759483,0.0
+Embeddings + Ridge,shift_-5,accountants_auditors_47120,2.806248934157691,0.0
+Embeddings + Ridge,shift_-5,software_developers_57192,1.0438302636517403,0.0
+Embeddings + Ridge,shift_-5,software_developers_12407,1.7723706850661998,0.0
+Embeddings + Ridge,shift_-5,accountants_auditors_46125,1.916916016301517,0.0
+Embeddings + Ridge,shift_-5,software_developers_50552,1.0772299651091126,0.0
+Embeddings + Ridge,shift_-5,registered_nurses_01097,3.3606330666485595,0.0
+Embeddings + Ridge,shift_-5,software_developers_04973,0.6752273720152617,0.0
+Embeddings + Ridge,shift_-5,accountants_auditors_44358,3.439703266981394,0.0
+Embeddings + Ridge,shift_-5,accountants_auditors_57065,0.8219723539585981,0.0
+Embeddings + Ridge,shift_-5,construction_laborers_46076,0.45065762893029415,0.0
+Embeddings + Ridge,shift_-5,accountants_auditors_00344,1.409159508644267,0.0
+Embeddings + Ridge,delete_job,elementary_middle_school_teachers_29308,-1.2974314099669124,-3.0000000000000004
+Embeddings + Ridge,delete_job,accountants_auditors_17089,-1.3427773246186776,-1.8333333333333335
+Embeddings + Ridge,delete_job,accountants_auditors_24629,-3.641117898697167,-2.25
+Embeddings + Ridge,delete_job,elementary_middle_school_teachers_27832,-5.029867956136087,-2.583333333333334
+Embeddings + Ridge,delete_job,construction_laborers_25119,-2.664211522725914,-3.083333333333332
+Embeddings + Ridge,delete_job,elementary_middle_school_teachers_15121,-2.8825373613306944,-2.416666666666666
+Embeddings + Ridge,delete_job,software_developers_16086,-1.1166018950709908,-2.1666666666666665
+Embeddings + Ridge,delete_job,elementary_middle_school_teachers_19976,-4.914819008813409,-2.583333333333334
+Embeddings + Ridge,delete_job,software_developers_57875,-3.397216574932532,-2.75
+Embeddings + Ridge,delete_job,accountants_auditors_47120,-2.057556925783617,-1.5833333333333333
+Embeddings + Ridge,delete_job,software_developers_57192,-3.6719295504405363,-2.166666666666667
+Embeddings + Ridge,delete_job,software_developers_12407,-2.593596933564598,-2.5
+Embeddings + Ridge,delete_job,accountants_auditors_46125,-4.559907813615963,-2.833333333333334
+Embeddings + Ridge,delete_job,software_developers_50552,-2.674565916163483,-2.666666666666667
+Embeddings + Ridge,delete_job,registered_nurses_01097,-1.187481765035562,-1.9166666666666667
+Embeddings + Ridge,delete_job,software_developers_04973,-2.963415022472461,-2.25
+Embeddings + Ridge,delete_job,accountants_auditors_44358,-1.0127619150656226,-1.5
+Embeddings + Ridge,delete_job,accountants_auditors_57065,-2.4473471235327526,-2.833333333333333
+Embeddings + Ridge,delete_job,construction_laborers_46076,-3.901559401498046,-3.916666666666666
+Embeddings + Ridge,delete_job,accountants_auditors_00344,-4.449256417567721,-4.083333333333332
+Fine-tuned BERT,shift_+5,elementary_middle_school_teachers_29308,-2.4287259578704834,0.0
+Fine-tuned BERT,shift_+5,accountants_auditors_17089,0.10985898971557617,0.0
+Fine-tuned BERT,shift_+5,accountants_auditors_24629,-2.262500286102295,0.0
+Fine-tuned BERT,shift_+5,elementary_middle_school_teachers_27832,-2.44697904586792,0.0
+Fine-tuned BERT,shift_+5,construction_laborers_25119,-4.287576675415039,0.0
+Fine-tuned BERT,shift_+5,elementary_middle_school_teachers_15121,-0.8544402122497559,0.0
+Fine-tuned BERT,shift_+5,software_developers_16086,-2.2056002616882324,0.0
+Fine-tuned BERT,shift_+5,elementary_middle_school_teachers_19976,-1.485581874847412,0.0
+Fine-tuned BERT,shift_+5,software_developers_57875,-1.6638097763061523,0.0
+Fine-tuned BERT,shift_+5,accountants_auditors_47120,-0.3450181484222412,0.0
+Fine-tuned BERT,shift_+5,software_developers_57192,-1.264364242553711,0.0
+Fine-tuned BERT,shift_+5,software_developers_12407,-1.0935311317443848,0.0
+Fine-tuned BERT,shift_+5,accountants_auditors_46125,-1.9301204681396484,0.0
+Fine-tuned BERT,shift_+5,software_developers_50552,-1.8061394691467285,0.0
+Fine-tuned BERT,shift_+5,registered_nurses_01097,0.09942460060119629,0.0
+Fine-tuned BERT,shift_+5,software_developers_04973,-1.2297677993774414,0.0
+Fine-tuned BERT,shift_+5,accountants_auditors_44358,0.18388915061950684,0.0
+Fine-tuned BERT,shift_+5,accountants_auditors_57065,-1.3209962844848633,0.0
+Fine-tuned BERT,shift_+5,construction_laborers_46076,-4.81394100189209,0.0
+Fine-tuned BERT,shift_+5,accountants_auditors_00344,-4.836088180541992,0.0
+Fine-tuned BERT,shift_-5,elementary_middle_school_teachers_29308,3.2138257026672363,0.0
+Fine-tuned BERT,shift_-5,accountants_auditors_17089,4.776156425476074,0.0
+Fine-tuned BERT,shift_-5,accountants_auditors_24629,6.159543037414551,0.0
+Fine-tuned BERT,shift_-5,elementary_middle_school_teachers_27832,6.010919570922852,0.0
+Fine-tuned BERT,shift_-5,construction_laborers_25119,0.0,0.0
+Fine-tuned BERT,shift_-5,elementary_middle_school_teachers_15121,6.671252250671387,0.0
+Fine-tuned BERT,shift_-5,software_developers_16086,4.647268295288086,0.0
+Fine-tuned BERT,shift_-5,elementary_middle_school_teachers_19976,6.149368762969971,0.0
+Fine-tuned BERT,shift_-5,software_developers_57875,7.849545478820801,0.0
+Fine-tuned BERT,shift_-5,accountants_auditors_47120,4.615572214126587,0.0
+Fine-tuned BERT,shift_-5,software_developers_57192,7.093047618865967,0.0
+Fine-tuned BERT,shift_-5,software_developers_12407,6.6846699714660645,0.0
+Fine-tuned BERT,shift_-5,accountants_auditors_46125,7.710886001586914,0.0
+Fine-tuned BERT,shift_-5,software_developers_50552,6.091835021972656,0.0
+Fine-tuned BERT,shift_-5,registered_nurses_01097,4.54204249382019,0.0
+Fine-tuned BERT,shift_-5,software_developers_04973,7.029601573944092,0.0
+Fine-tuned BERT,shift_-5,accountants_auditors_44358,4.462519884109497,0.0
+Fine-tuned BERT,shift_-5,accountants_auditors_57065,6.073163986206055,0.0
+Fine-tuned BERT,shift_-5,construction_laborers_46076,4.501194953918457,0.0
+Fine-tuned BERT,shift_-5,accountants_auditors_00344,3.2371749877929688,0.0
+Fine-tuned BERT,delete_job,elementary_middle_school_teachers_29308,-2.8539047241210938,-3.0000000000000004
+Fine-tuned BERT,delete_job,accountants_auditors_17089,-1.8085895776748657,-1.8333333333333335
+Fine-tuned BERT,delete_job,accountants_auditors_24629,-2.288381576538086,-2.25
+Fine-tuned BERT,delete_job,elementary_middle_school_teachers_27832,-2.61737060546875,-2.583333333333334
+Fine-tuned BERT,delete_job,construction_laborers_25119,-3.935161590576172,-3.083333333333332
+Fine-tuned BERT,delete_job,elementary_middle_school_teachers_15121,-2.320774555206299,-2.416666666666666
+Fine-tuned BERT,delete_job,software_developers_16086,-2.256467580795288,-2.1666666666666665
+Fine-tuned BERT,delete_job,elementary_middle_school_teachers_19976,-2.5578956604003906,-2.583333333333334
+Fine-tuned BERT,delete_job,software_developers_57875,-2.8057470321655273,-2.75
+Fine-tuned BERT,delete_job,accountants_auditors_47120,-1.4970039129257202,-1.5833333333333333
+Fine-tuned BERT,delete_job,software_developers_57192,-2.4894490242004395,-2.166666666666667
+Fine-tuned BERT,delete_job,software_developers_12407,-2.3522891998291016,-2.5
+Fine-tuned BERT,delete_job,accountants_auditors_46125,-2.921365737915039,-2.833333333333334
+Fine-tuned BERT,delete_job,software_developers_50552,-2.6207094192504883,-2.666666666666667
+Fine-tuned BERT,delete_job,registered_nurses_01097,-1.8514295816421509,-1.9166666666666667
+Fine-tuned BERT,delete_job,software_developers_04973,-2.3147568702697754,-2.25
+Fine-tuned BERT,delete_job,accountants_auditors_44358,-1.8211313486099243,-1.5
+Fine-tuned BERT,delete_job,accountants_auditors_57065,-2.66147518157959,-2.833333333333333
+Fine-tuned BERT,delete_job,construction_laborers_46076,-3.9509353637695312,-3.916666666666666
+Fine-tuned BERT,delete_job,accountants_auditors_00344,-4.704705238342285,-4.083333333333332
+Rule-based (bonus),shift_+5,elementary_middle_school_teachers_29308,0.0,0.0
+Rule-based (bonus),shift_+5,accountants_auditors_17089,0.0,0.0
+Rule-based (bonus),shift_+5,accountants_auditors_24629,0.0,0.0
+Rule-based (bonus),shift_+5,elementary_middle_school_teachers_27832,0.0,0.0
+Rule-based (bonus),shift_+5,construction_laborers_25119,0.0,0.0
+Rule-based (bonus),shift_+5,elementary_middle_school_teachers_15121,0.0,0.0
+Rule-based (bonus),shift_+5,software_developers_16086,0.0,0.0
+Rule-based (bonus),shift_+5,elementary_middle_school_teachers_19976,0.0,0.0
+Rule-based (bonus),shift_+5,software_developers_57875,0.0,0.0
+Rule-based (bonus),shift_+5,accountants_auditors_47120,0.0,0.0
+Rule-based (bonus),shift_+5,software_developers_57192,0.0,0.0
+Rule-based (bonus),shift_+5,software_developers_12407,0.0,0.0
+Rule-based (bonus),shift_+5,accountants_auditors_46125,0.0,0.0
+Rule-based (bonus),shift_+5,software_developers_50552,0.0,0.0
+Rule-based (bonus),shift_+5,registered_nurses_01097,0.0,0.0
+Rule-based (bonus),shift_+5,software_developers_04973,0.0,0.0
+Rule-based (bonus),shift_+5,accountants_auditors_44358,0.0,0.0
+Rule-based (bonus),shift_+5,accountants_auditors_57065,0.0,0.0
+Rule-based (bonus),shift_+5,construction_laborers_46076,0.0,0.0
+Rule-based (bonus),shift_+5,accountants_auditors_00344,0.0,0.0
+Rule-based (bonus),shift_-5,elementary_middle_school_teachers_29308,0.0,0.0
+Rule-based (bonus),shift_-5,accountants_auditors_17089,0.0,0.0
+Rule-based (bonus),shift_-5,accountants_auditors_24629,0.0,0.0
+Rule-based (bonus),shift_-5,elementary_middle_school_teachers_27832,0.0,0.0
+Rule-based (bonus),shift_-5,construction_laborers_25119,0.0,0.0
+Rule-based (bonus),shift_-5,elementary_middle_school_teachers_15121,0.0,0.0
+Rule-based (bonus),shift_-5,software_developers_16086,0.0,0.0
+Rule-based (bonus),shift_-5,elementary_middle_school_teachers_19976,0.0,0.0
+Rule-based (bonus),shift_-5,software_developers_57875,0.0,0.0
+Rule-based (bonus),shift_-5,accountants_auditors_47120,0.0,0.0
+Rule-based (bonus),shift_-5,software_developers_57192,0.0,0.0
+Rule-based (bonus),shift_-5,software_developers_12407,0.0,0.0
+Rule-based (bonus),shift_-5,accountants_auditors_46125,0.0,0.0
+Rule-based (bonus),shift_-5,software_developers_50552,0.0,0.0
+Rule-based (bonus),shift_-5,registered_nurses_01097,0.0,0.0
+Rule-based (bonus),shift_-5,software_developers_04973,0.0,0.0
+Rule-based (bonus),shift_-5,accountants_auditors_44358,0.0,0.0
+Rule-based (bonus),shift_-5,accountants_auditors_57065,0.0,0.0
+Rule-based (bonus),shift_-5,construction_laborers_46076,0.0,0.0
+Rule-based (bonus),shift_-5,accountants_auditors_00344,0.0,0.0
+Rule-based (bonus),delete_job,elementary_middle_school_teachers_29308,-3.0000000000000004,-3.0000000000000004
+Rule-based (bonus),delete_job,accountants_auditors_17089,-1.8333333333333335,-1.8333333333333335
+Rule-based (bonus),delete_job,accountants_auditors_24629,-2.25,-2.25
+Rule-based (bonus),delete_job,elementary_middle_school_teachers_27832,-2.583333333333334,-2.583333333333334
+Rule-based (bonus),delete_job,construction_laborers_25119,-3.083333333333332,-3.083333333333332
+Rule-based (bonus),delete_job,elementary_middle_school_teachers_15121,-2.416666666666666,-2.416666666666666
+Rule-based (bonus),delete_job,software_developers_16086,-2.1666666666666665,-2.1666666666666665
+Rule-based (bonus),delete_job,elementary_middle_school_teachers_19976,-2.583333333333334,-2.583333333333334
+Rule-based (bonus),delete_job,software_developers_57875,-2.75,-2.75
+Rule-based (bonus),delete_job,accountants_auditors_47120,-1.5833333333333333,-1.5833333333333333
+Rule-based (bonus),delete_job,software_developers_57192,-2.166666666666667,-2.166666666666667
+Rule-based (bonus),delete_job,software_developers_12407,-2.5,-2.5
+Rule-based (bonus),delete_job,accountants_auditors_46125,-2.833333333333334,-2.833333333333334
+Rule-based (bonus),delete_job,software_developers_50552,-2.666666666666667,-2.666666666666667
+Rule-based (bonus),delete_job,registered_nurses_01097,-1.9166666666666667,-1.9166666666666667
+Rule-based (bonus),delete_job,software_developers_04973,-2.25,-2.25
+Rule-based (bonus),delete_job,accountants_auditors_44358,-1.5,-1.5
+Rule-based (bonus),delete_job,accountants_auditors_57065,-2.833333333333333,-2.833333333333333
+Rule-based (bonus),delete_job,construction_laborers_46076,-3.916666666666666,-3.916666666666666
+Rule-based (bonus),delete_job,accountants_auditors_00344,-4.083333333333332,-4.083333333333332

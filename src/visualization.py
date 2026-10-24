@@ -201,7 +201,8 @@ def probe() -> None:
     ax.set(title="Prueba de fechas: cambio medio de la predicción (20 CVs de test)",
            ylabel="Δ predicción (años)")
     ax.grid(axis="x", visible=False)
-    ax.legend(ncol=5, loc="upper center", bbox_to_anchor=(0.5, -0.16), fontsize=9)
+    ax.legend(ncol=5, loc="upper center", bbox_to_anchor=(0.5, -0.16), fontsize=9,
+              markerscale=0.2)
     save(fig, "q1_probe")
 
 

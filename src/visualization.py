@@ -14,6 +14,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import seaborn as sns
 
 from src.evaluation import BAND_ORDER, MAIN_MODELS, load_test
 from src.utils import EXP_CAP, FIG_DIR, PROCESSED_CSV, TABLE_DIR
@@ -129,17 +130,12 @@ def grouped_bars(table: str, col: str, value: str, name: str, title: str, ylabel
 def confusions() -> None:
     for name, label in MAIN_MODELS.items():
         cm = pd.read_csv(TABLE_DIR / f"band_confusion_{name}.csv", index_col=0)
-        share = cm.div(cm.sum(axis=1), axis=0)
+        share = cm.div(cm.sum(axis=1), axis=0)  # color = % de cada banda real
         fig, ax = plt.subplots(figsize=(4.4, 3.9))
-        ax.imshow(share, cmap="Blues", vmin=0, vmax=1)
-        for i in range(len(cm)):
-            for j in range(len(cm)):
-                ax.text(j, i, cm.iat[i, j], ha="center", va="center", fontsize=10,
-                        color="white" if share.iat[i, j] > 0.55 else INK)
-        ax.set_xticks(range(4), BAND_ORDER)
-        ax.set_yticks(range(4), BAND_ORDER)
+        sns.heatmap(share, annot=cm, fmt="d", cmap="Blues", vmin=0, vmax=1, cbar=False,
+                    linewidths=2, linecolor=SURFACE, annot_kws={"fontsize": 10}, ax=ax)
         ax.set(title=label, xlabel="banda predicha", ylabel="banda real")
-        ax.grid(False)
+        ax.tick_params(axis="y", rotation=0)
         save(fig, f"confusion_{name}")
 
 

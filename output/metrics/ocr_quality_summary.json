@@ -1,0 +1,17 @@
+{
+  "n_cvs": 4000,
+  "cer_mean": 0.0076,
+  "cer_median": 0.0074,
+  "wer_mean": 0.0357,
+  "wer_median": 0.0339,
+  "cer_raw_mean": 0.0099,
+  "wer_raw_mean": 0.0909,
+  "cer_p95": 0.0116,
+  "years_ok_raw": 0.945,
+  "years_ok_repaired": 0.9996,
+  "ranges_ok_repaired": 0.9967,
+  "cvs_with_missing_dash": 1111,
+  "ranges_missing_dash": 1337,
+  "cvs_all_years_ok": 3990,
+  "corr_conf_vs_cer": 0.0362
+}

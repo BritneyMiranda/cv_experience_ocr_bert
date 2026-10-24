@@ -1,0 +1,36 @@
+{
+  "n_cvs": 4000,
+  "missing_ocr": [],
+  "conf_threshold": 0.9,
+  "low_conf_lines_dropped": 31,
+  "cvs_with_low_conf_lines": 31,
+  "date_ranges_missing_dash_repaired": 1337,
+  "pii_removed": {
+    "email": 4000,
+    "phone": 3985,
+    "location": 4000,
+    "name": 8000
+  },
+  "masking": {
+    "total_experience": {
+      "phrases": 0,
+      "cvs": 0
+    },
+    "experience_colon": {
+      "phrases": 0,
+      "cvs": 0
+    },
+    "age": {
+      "phrases": 0,
+      "cvs": 0
+    },
+    "birth": {
+      "phrases": 0,
+      "cvs": 0
+    }
+  },
+  "cvs_masked": 0,
+  "mean_chars_clean": 516.1,
+  "mean_words_clean": 65.3,
+  "cap": 20
+}

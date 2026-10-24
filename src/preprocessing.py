@@ -113,6 +113,7 @@ def clean_text(text: str) -> tuple[str, int]:
     text = re.sub(r"(\w)-\n([a-z])", r"\1\2", text)  # hyphenation: "manage-\nment"
     text = re.sub(r"(?<=[a-z,])\n(?=[a-z])", " ", text)  # línea cortada a mitad de frase
     text = re.sub(r"[ \t]+", " ", text)
+    text = re.sub(r"(?m)^ ", "", text)  # viñeta perdida por el OCR deja un espacio inicial
     text = re.sub(r"\n{3,}", "\n\n", text)
     return text.strip(), n_repaired
 

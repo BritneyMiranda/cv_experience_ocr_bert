@@ -178,8 +178,36 @@ def fairness() -> None:
     save(fig, "fairness_bert")
 
 
+def probe() -> None:
+    path = TABLE_DIR / "q1_probe_summary.csv"
+    if not path.exists():  # se genera con src/probe.py (necesita los modelos)
+        return
+    s = pd.read_csv(path)
+    changes = {"delete_job": "Borrar el trabajo\nmás antiguo", "shift_-5": "Todas las fechas\n−5 años",
+               "shift_+5": "Todas las fechas\n+5 años"}
+    models = ORDER[:4]
+    x = np.arange(len(changes))
+    width = 0.8 / len(models)
+    fig, ax = plt.subplots(figsize=(10, 4.4))
+    for i, label in enumerate(models):
+        vals = s[s["model"] == label].set_index("change").loc[list(changes), "mean_delta_pred"]
+        ax.bar(x + (i - 1.5) * width, vals, width=width * 0.92, color=COLORS[label], label=label)
+    expected = s.drop_duplicates("change").set_index("change").loc[list(changes),
+                                                                   "mean_delta_expected"]
+    ax.scatter(x, expected, marker="_", s=2500, color=INK, linewidths=2, zorder=3,
+               label="lo que haría un reclutador")
+    ax.axhline(0, color=INK, linewidth=0.8)
+    ax.set_xticks(x, list(changes.values()))
+    ax.set(title="Prueba de fechas: cambio medio de la predicción (20 CVs de test)",
+           ylabel="Δ predicción (años)")
+    ax.grid(axis="x", visible=False)
+    ax.legend(ncol=5, loc="upper center", bbox_to_anchor=(0.5, -0.16), fontsize=9)
+    save(fig, "q1_probe")
+
+
 def main() -> None:
     FIG_DIR.mkdir(parents=True, exist_ok=True)
+    probe()
     target_distribution()
     ocr_quality()
     pred_vs_true()

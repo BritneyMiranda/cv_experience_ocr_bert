@@ -5,10 +5,32 @@ Sistema de document AI de punta a punta: lee la imagen de un CV, extrae el texto
 modelo **BERT** ajustado como regresor. Lo comparamos con tres baselines (mediana,
 TF-IDF + Ridge y sentence embeddings + Ridge).
 
-> 🚧 Documento en construcción: cada sección se completa al cerrar su fase.
-
 ## 1. ¿Qué hace el proyecto y para quién?
-_Pendiente._
+El sistema recibe la **imagen** de un CV, la convierte en texto con PaddleOCR y estima los
+**años de experiencia laboral** del candidato. Esa cifra casi nunca está escrita en el CV:
+hay que deducirla de las fechas de cada trabajo, de cuántos puestos hay y de cuándo terminó
+la formación.
+
+Está pensado para equipos que procesan muchos CVs escaneados o en PDF:
+- agencias de reclutamiento;
+- portales de empleo;
+- servicios públicos de empleo;
+- áreas de RR. HH.
+
+Su uso es **prellenar un perfil o ayudar a ordenar CVs**, nunca decidir a quién se
+entrevista ni a quién se contrata (ver la Pregunta 4).
+
+Comparamos cinco formas de estimar la experiencia sobre exactamente la misma partición:
+- una mediana;
+- TF-IDF + Ridge;
+- sentence embeddings + Ridge;
+- DistilBERT ajustado como regresor;
+- como bonus, una regla que suma las fechas.
+
+**Resultado en una línea:** BERT reduce el error de TF-IDF de 0.98 a **0.16 años**, una mejora
+estadísticamente significativa. Pero una regla de 40 líneas que suma los periodos llega a
+**0.02 años**. Además, la prueba de las fechas muestra que BERT aprendió un atajo propio de
+este dataset.
 
 ## 2. Muestreo de CVs y distribución de la experiencia
 **Dataset:** [PopResume](https://huggingface.co/datasets/sumin-yu/PopResume) (Yu, Park & Moon,
@@ -317,30 +339,327 @@ Los pesos no se suben a GitHub. Se regeneran con `python -m src.train_bert` y qu
 `models/bert/bert/`.
 
 ## 9. Métricas finales y ganancia de BERT
-_Pendiente (Fase 6)._
+Todo se evaluó **una sola vez en test** (600 CVs), con [src/evaluation.py](src/evaluation.py)
+`--final`. Las figuras se generan con [src/visualization.py](src/visualization.py).
+
+[output/tables/model_comparison.csv](output/tables/model_comparison.csv):
+
+| Model | MAE (years) | RMSE (years) | Acc ±1 | Acc ±2 | Acc ±3 | Band accuracy | Band macro-F1 | R² | Training time | Inference time per CV |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|
+| Median | 3.620 | 4.706 | 16.5 % | 34.0 % | 49.8 % | 32.3 % | 0.122 | −0.050 | 0.0 s | 0.00 ms |
+| TF-IDF + Ridge | 0.984 | 1.401 | 64.5 % | 90.5 % | 95.7 % | 84.0 % | 0.848 | 0.907 | 0.5 s | 0.12 ms |
+| Embeddings + Ridge | 1.293 | 1.763 | 51.5 % | 80.2 % | 92.0 % | 79.7 % | 0.802 | 0.853 | 5.0 s | 1.72 ms |
+| **Fine-tuned BERT** | **0.161** | **0.219** | **100 %** | **100 %** | **100 %** | **95.3 %** | **0.953** | **0.998** | 264.3 s | 1.30 ms |
+| Rule-based (bonus) | 0.024 | 0.042 | 100 % | 100 % | 100 % | 99.2 % | 0.992 | 1.000 | 0.0 s | 0.01 ms |
+
+Los tiempos de inferencia son por CV en lote, en una GPU T4, sin contar el OCR (0.71 s por
+CV). El tiempo de entrenamiento de los embeddings incluye codificar el set de entrenamiento.
+
+**Ganancia de BERT.** Es la reducción de MAE (baseline − BERT), con un IC 95 % por bootstrap
+**pareado** de 2,000 remuestreos sobre los mismos CVs de test
+([bert_gain_bootstrap.csv](output/tables/bert_gain_bootstrap.csv)):
+
+| BERT vs | Reducción de MAE | IC 95 % | ¿Significativa? |
+|---|---:|---|---|
+| Median | **+3.46 años** | [+3.22, +3.70] | Sí |
+| TF-IDF + Ridge | **+0.82 años** | [+0.75, +0.91] | Sí |
+| Embeddings + Ridge | **+1.13 años** | [+1.04, +1.23] | Sí |
+| Rule-based (bonus) | **−0.14 años** | [−0.15, −0.13] | Sí: **BERT es peor** |
+
+![Ganancia de BERT](output/figures/bert_gain_ci.png)
+
+**Predicho vs real** (la línea punteada es la de 45°):
+
+![Predicho vs real](output/figures/pred_vs_true_all.png)
+
+**MAE por banda de experiencia real** ([mae_by_band.csv](output/tables/mae_by_band.csv)):
+
+| Modelo | 0–2 (n=121) | 3–5 (n=172) | 6–10 (n=194) | 11–20 (n=113) |
+|---|---:|---:|---:|---:|
+| Median | 4.11 | 1.63 | 2.18 | 8.61 |
+| TF-IDF + Ridge | 0.74 | 0.89 | 0.83 | **1.66** |
+| Embeddings + Ridge | 1.13 | 0.97 | 1.10 | **2.31** |
+| Fine-tuned BERT | 0.14 | 0.17 | 0.15 | 0.20 |
+| Rule-based | 0.02 | 0.02 | 0.03 | 0.02 |
+
+**¿Tiran hacia el centro?** Sí, los baselines:
+- TF-IDF y los embeddings **subestiman a los seniors en ~1.2 años** (error medio −1.18 y −1.14
+  en 11–20).
+- Y sobrestiman a los CVs de 0–5 años (hasta +0.47).
+- BERT no muestra ese patrón: su sesgo es pequeño y positivo en todas las bandas (+0.02 a
+  +0.12).
+
+![Error medio por banda](output/figures/mean_error_by_band.png)
+
+**MAE por ocupación** ([mae_by_occupation.csv](output/tables/mae_by_occupation.csv)):
+
+| Modelo | Accountants | Construction | Teachers | Nurses | Software dev. |
+|---|---:|---:|---:|---:|---:|
+| TF-IDF + Ridge | 0.98 | 0.97 | 0.99 | 0.96 | 1.02 |
+| Embeddings + Ridge | 1.25 | 1.19 | 1.31 | 1.23 | 1.48 |
+| Fine-tuned BERT | 0.18 | 0.15 | 0.14 | 0.18 | 0.16 |
+| Rule-based | 0.02 | 0.02 | 0.03 | 0.02 | 0.02 |
+
+Ninguna ocupación es claramente más difícil. *Software developers* es la peor para los
+embeddings, coherente con que es la ocupación con más errores de OCR en siglas (`APl`,
+`Ul`).
+
+Las matrices de confusión por bandas están en `output/figures/confusion_<modelo>.png`.
+
+**Los 10 mayores errores de BERT** ([bert_top10_errors.csv](output/tables/bert_top10_errors.csv)):
+- Los 10 son **sobrestimaciones**, de +0.68 a +0.93 años.
+- En los 10, las fechas del OCR **coinciden exactamente con la referencia**, así que el OCR
+  no es la causa.
+
+| Causa | CVs | Detalle |
+|---|---:|---|
+| **Hueco entre trabajos** | 7 | Huecos de 0.8 a 2.4 años. BERT cuenta parte del hueco como experiencia (ver la prueba de fechas, Pregunta 1). |
+| **Otra: carrera larga y continua cerca del tope** | 3 | 18–19 años con 4 trabajos sin huecos, en la banda con menos datos (11–20). |
+| OCR leyó mal una fecha / orden de lectura / solapamiento / fechas faltantes / truncamiento | 0 | No aparecen: el OCR es correcto, la plantilla tiene una columna, no hay solapamientos y ningún CV supera 256 tokens. |
+
+**Posibles mejoras:**
+1. **Darle a BERT las duraciones ya calculadas:** por ejemplo, agregar al texto
+   "periodo: 3.2 años" junto a cada trabajo, o combinar BERT con la suma de fechas en un
+   modelo híbrido.
+2. **Aumento de datos con fechas desplazadas,** para romper el atajo "2023 = hoy".
+3. **Promediar varias semillas** o hacer *ensembles*, porque el MAE de validación es ruidoso.
+4. **Más CVs senior,** que es la banda más escasa.
 
 ## 10. Preguntas analíticas
 ### Pregunta 1 — ¿Qué aprende BERT que los baselines no pueden?
+**¿Cuánto mejora?** BERT reduce el MAE en **3.46 años frente a la mediana, 0.82 frente a
+TF-IDF y 1.13 frente a los embeddings**. Todas las mejoras son estadísticamente
+significativas: los IC 95 % por bootstrap pareado excluyen el 0. Pasa de ~90 % a **100 %
+de CVs dentro de ±2 años**.
+
+**¿De dónde viene la ganancia?** Sobre todo de los **seniors**. En la banda 11–20, el MAE
+baja de 1.66 (TF-IDF) a **0.20**, una ganancia de 1.46 años. En las demás bandas la ganancia
+es de 0.6–0.7 años. Los baselines no pueden *restar* fechas:
+- **TF-IDF** usa los años como palabras sueltas (`2008` → más experiencia, `2021` → menos) y
+  la progresión del vocabulario (*directed, managed* → senior).
+- **Los embeddings** resumen el tema del CV y casi ignoran los dígitos.
+
+Por eso ambos comprimen las predicciones hacia la media y fallan más en los extremos.
+
+**Prueba de las fechas** ([src/probe.py](src/probe.py), 20 CVs de test con ≥ 2 trabajos,
+[q1_probe_summary.csv](output/tables/q1_probe_summary.csv)):
+
+| Cambio en el CV | Lo que haría un reclutador | BERT | TF-IDF | Embeddings | Reglas |
+|---|---:|---:|---:|---:|---:|
+| Borrar el trabajo más antiguo | −2.55 | **−2.63** | −0.77 | −2.89 | −2.55 |
+| Todas las fechas −5 años | 0 | **+5.38** | +2.92 | +1.75 | 0 |
+| Todas las fechas +5 años | 0 | −1.79 | −0.38 | +0.72 | 0 |
+
+![Prueba de fechas](output/figures/q1_probe.png)
+
+**Qué nos dice:**
+- **Al borrar un trabajo, BERT reacciona como un reclutador:** resta casi exactamente su
+  duración (desviación media de 0.17 años). TF-IDF apenas se mueve (−0.77), porque para él
+  borrar un trabajo es perder unas cuantas palabras. BERT **sí lee las fechas**.
+- **Al desplazar todas las fechas, la experiencia real no cambia, pero BERT sí.** Hacia el
+  pasado, BERT suma **+5.4 años**. En el entrenamiento todos los trabajos actuales terminan en
+  2023.01, así que BERT aprendió algo como "**2023 − año de inicio − huecos**" en lugar de
+  "fin − inicio": usa 2023 como un "hoy" fijo. Hacia el futuro el efecto es menor y errático
+  (−1.8), porque son años que nunca vio.
+- **Conclusión:** BERT lee y combina las fechas, algo que los baselines no hacen, pero se
+  apoya en una regularidad de este dataset que no se cumpliría con CVs escritos en otro año.
+  La regla que suma periodos es inmune a ese cambio.
+
 ### Pregunta 2 — ¿Cuánto cuesta el ruido del OCR?
+**Calidad del OCR** (sección 4):
+- CER **0.76 %** y WER **3.6 %**.
+- Años bien leídos: **94.5 %** en crudo y **99.96 %** tras reparar los rangos sin guion.
+- Falla en tres cosas: omite el guion de `AAAA.MM–AAAA.MM` (28 % de los CVs), confunde `I`/`l`
+  en siglas (`APl`, `Ul`) y corta el último carácter de las líneas más largas (32 CVs de
+  *teachers*).
+
+**Mismo modelo, mismos CVs de test, con el texto del OCR y con el texto de referencia**
+([q2_ocr_vs_reference.csv](output/tables/q2_ocr_vs_reference.csv)):
+
+| Modelo | MAE con OCR | MAE con referencia | Brecha (OCR − ref.) |
+|---|---:|---:|---:|
+| Median | 3.620 | 3.620 | 0.000 |
+| TF-IDF + Ridge | 0.984 | 0.984 | +0.001 |
+| Embeddings + Ridge | 1.293 | 1.301 | −0.008 |
+| Fine-tuned BERT | 0.161 | 0.161 | −0.001 |
+| Rule-based | 0.024 | 0.021 | +0.003 |
+
+**El ruido del OCR, después de la limpieza, prácticamente no cuesta nada:** las brechas son
+≤ 0.008 años, menos de 3 días. Hay dos razones:
+1. Los errores del OCR casi nunca tocan los dígitos.
+2. El único error que sí afecta a las fechas (el guion perdido) se repara de forma
+   determinista.
+
+El más "sensible" es el modelo de reglas (+0.003), porque es el único que usa cada mes
+exacto: en los 32 CVs con el mes cortado (`2023.0`) asume el mes 6. Los modelos aprendidos
+son robustos porque reparten la información entre muchos tokens redundantes (año de inicio,
+número de líneas, vocabulario), y BERT además ve los dígitos en piezas, así que tolera el
+guion faltante.
+
+Sin la limpieza, el costo sí se nota en los baselines (Pregunta 3): +0.05 años en TF-IDF y
++0.09 en los embeddings.
+
 ### Pregunta 3 — Sensibilidad metodológica
+Se probaron tres decisiones ([q3_sensitivity.csv](output/tables/q3_sensitivity.csv), MAE en
+test). Cada modelo se reentrenó con cada versión del texto.
+
+**Limpieza del OCR:**
+
+| Modelo | OCR crudo | **OCR limpio** (base) | Limpio sin líneas con conf. < 0.9 |
+|---|---:|---:|---:|
+| TF-IDF + Ridge | 1.032 | **0.984** | 0.985 |
+| Embeddings + Ridge | 1.385 | **1.293** | 1.293 |
+| Fine-tuned BERT | 0.139 | 0.161 | 0.137 |
+| Rule-based | 0.024 | 0.024 | 0.024 |
+
+**Otras dos decisiones:**
+
+| Decisión | Configuración base | Alternativa |
+|---|---|---|
+| Números en TF-IDF | conservar dígitos: **0.984** | quitar dígitos: 1.829 (+86 %) |
+| Pérdida de BERT | MSE: 0.161 | Huber (δ = 1 año): **0.123** |
+
+- **La limpieza ayuda a los baselines** (−0.05 y −0.09 años). Sin reparar el guion,
+  `2018.032020.08` es un token raro y los años dejan de verse como tokens separados.
+- **A las reglas les da igual**, porque su regex ya tolera el guion faltante.
+- **Filtrar por confianza no cambia nada:** solo elimina 31 líneas, y la confianza no se
+  correlaciona con el error (r = 0.04).
+- **Para BERT, las tres versiones quedan entre 0.137 y 0.161.** Es el mismo orden de magnitud
+  que la oscilación del MAE de validación entre épocas (±0.05), así que con una sola semilla
+  no se puede afirmar que el texto crudo sea mejor. Lo mismo pasa con Huber frente a MSE
+  (−0.04): es prometedor, porque Huber es menos sensible a los CVs con huecos que generan los
+  errores grandes, pero necesitaría varias semillas para confirmarlo.
+- **Los dígitos son la decisión que más pesa:** sin ellos, TF-IDF casi duplica su error.
+
 ### Pregunta 4 — Valor de negocio, equidad y ética
+**¿Quién lo usaría y para qué?**
+- **Portales de empleo y agencias:** *prellenar* el campo "años de experiencia" de un perfil
+  a partir de un CV escaneado, para que el candidato lo confirme.
+- **Servicios públicos de empleo:** ordenar y agrupar grandes volúmenes de CVs en papel para
+  derivarlos a programas según la trayectoria.
+- **Áreas de RR. HH.:** detectar inconsistencias, por ejemplo cuando la experiencia declarada
+  no coincide con la que se deduce de las fechas.
+
+Prellenar un dato que una persona revisa es muy distinto de **filtrar automáticamente** quién
+pasa a entrevista. Para esto último el sistema no debe usarse.
+
+**¿Qué cuesta un error?**
+- **±2 años** cambia la banda junior/semi-senior. Al prellenar un perfil es una molestia que
+  el candidato corrige. En un filtro por requisito ("≥ 5 años") puede dejar fuera a alguien
+  que sí cumple.
+- **±5 años** confunde a un junior con un senior: ofertas equivocadas, rangos salariales mal
+  sugeridos y pérdida de confianza en la herramienta.
+- **Subestimar** es peor para el candidato, porque lo descarta en silencio y nadie revisa ese
+  error. **Sobrestimar** es más visible: el reclutador lo detecta en la entrevista, aunque le
+  hace perder tiempo y puede llevar a una contratación desajustada. Por eso, si el sistema se
+  usara para ordenar CVs, convendría penalizar más la subestimación o mostrar siempre un
+  intervalo.
+- En test, BERT nunca se equivoca en más de 1 año. TF-IDF se equivoca en más de 2 años en el
+  9.5 % de los CVs.
+
+**Chequeo de equidad** de BERT en test ([q4_fairness_sex.csv](output/tables/q4_fairness_sex.csv),
+[q4_fairness_race.csv](output/tables/q4_fairness_race.csv)). El error medio es predicho − real,
+con IC 95 % por bootstrap:
+
+| Grupo | n | MAE | Error medio | IC 95 % |
+|---|---:|---:|---:|---|
+| Female | 303 | 0.164 | +0.050 | [+0.024, +0.074] |
+| Male | 297 | 0.157 | +0.048 | [+0.023, +0.070] |
+| White | 470 | 0.159 | +0.040 | [+0.022, +0.061] |
+| Asian/Pacific Islander | 101 | 0.164 | +0.075 | [+0.035, +0.120] |
+| Black | 29 | 0.175 | +0.089 | [+0.015, +0.169] |
+
+![Equidad](output/figures/fairness_bert.png)
+
+**Cómo leerlo:**
+- **BERT sobrestima levemente a todos los grupos,** en +0.04 a +0.09 años (2 a 5 semanas).
+- **Por sexo no hay diferencia:** +0.050 frente a +0.048.
+- **Por raza,** el error medio es algo mayor para los grupos Asian/Pacific Islander y Black,
+  pero los intervalos se solapan con el de White, y el grupo Black tiene solo 29 CVs. Con este
+  tamaño no hay evidencia de un sesgo sistemático, y en cualquier caso la magnitud es de
+  semanas.
+- **Explicación plausible,** aunque sexo y raza no son entradas del modelo: los CVs de esos
+  grupos tienen **más años de experiencia en promedio** en esta muestra (7.3–7.5 frente a 6.5),
+  es decir, más trabajos y más probabilidad de huecos. Y los huecos son justamente lo que BERT
+  sobrestima (Pregunta 1). Un sesgo puede entrar por variables correlacionadas, como la
+  trayectoria, sin que el atributo sea un feature.
+- **Muestra pequeña:** el split de test contiene solo tres grupos raciales y no permite
+  analizar intersecciones (sexo × raza).
+
+**Límites éticos.** El sistema estima un número a partir de fechas. No mide calidad, logros
+ni potencial, y hereda los sesgos de cómo se escriben los CVs. Los huecos de carrera, que
+afectan más a quienes cuidan a otros, a migrantes o a personas que estuvieron enfermas, son
+justamente donde más se equivoca. **Nunca debe decidir quién es contratado ni descartar CVs
+de forma automática.** Como mucho, puede prellenar un dato que una persona revisa, con el CV
+original siempre a la vista.
 
 ## 11. Limitaciones y aplicaciones de negocio
-_Pendiente._
+**Limitaciones:**
+- **CVs sintéticos con una sola plantilla.** Todas las imágenes de PopResume comparten el
+  mismo diseño de una columna y las mismas fuentes, y `exp_year` es exactamente la suma de los
+  periodos. Por eso el OCR es casi perfecto y una regla resuelve el problema. Con CVs reales
+  (varios diseños, dos columnas, fotos de baja calidad, fechas como "Jan 2019 – present" o
+  "2 años"), el OCR y el orden de lectura serían el cuello de botella, y la ventaja de un
+  modelo aprendido frente a una regla sería mayor.
+- **Fecha de referencia fija.** Todos los trabajos actuales terminan en 2023.01 y BERT aprendió
+  a usar ese "hoy" (Pregunta 1). Habría que reentrenarlo o aumentar los datos antes de usarlo
+  con CVs de otro año.
+- **Solo 5 ocupaciones,** basadas en estadísticas de EE. UU. y **solo en inglés**. No sabemos
+  cómo se comporta con otros sectores, países o idiomas.
+- **4,000 CVs y una sola semilla por configuración.** Las diferencias pequeñas entre variantes
+  de BERT (≤ 0.04 años) no son concluyentes.
+- **El chequeo de equidad tiene poca potencia** para los grupos pequeños y no cubre
+  intersecciones.
+
+**Aplicaciones y recomendación de despliegue:**
+- **Recomendación:** para documentos como estos, lo más costo-efectivo es **OCR + la regla que
+  suma fechas**. Es ~7 veces más precisa que BERT, explicable, no necesita GPU para la
+  inferencia y no depende del año de referencia.
+- **BERT vale la pena cuando las fechas no siguen un formato fijo.** Si los CVs son
+  heterogéneos, el valor de BERT está en *leer* textos variados, y lo ideal sería un sistema
+  híbrido: BERT o un extractor de entidades encuentra los periodos, y una regla los suma.
+- **En cualquier caso, el resultado es un dato de apoyo:** se muestra junto al CV para que una
+  persona lo confirme.
 
 ## 12. Cómo reproducir el proyecto
 El pipeline pesado (descarga, OCR y BERT) se ejecuta en **Google Colab con GPU** usando
 [notebooks/colab_pipeline.ipynb](notebooks/colab_pipeline.ipynb). Las imágenes y los pesos
 de los modelos no se suben a GitHub; se regeneran con los scripts de `src/`.
 
+**Preparación (una vez):**
 1. Crear una cuenta en Hugging Face, abrir la página del dataset
    [sumin-yu/PopResume](https://huggingface.co/datasets/sumin-yu/PopResume) y aceptar
    sus condiciones de acceso.
 2. Crear un token de acceso (lectura) y guardarlo en Colab → 🔑 *Secrets* con el nombre
    `HF_TOKEN`.
-3. Abrir el notebook en Colab, elegir *Runtime → T4 GPU* y ejecutar las celdas en orden.
+3. Abrir el notebook en Colab y elegir *Runtime → T4 GPU*. La celda de configuración monta
+   Google Drive y define `CV_STORAGE_DIR`, así que `data/`, `models/` y `output/` se guardan
+   en `MyDrive/cv_experience_ocr_bert`.
 
-_Los pasos detallados se completan en cada fase._
+**Pipeline**, en el orden de las celdas del notebook. Los tiempos son en una T4:
+
+| Paso | Comando | Tiempo | Produce |
+|---|---|---|---|
+| 1. Muestreo | `python -m src.download_data` | 21 min | `data/raw/` (imágenes, metadata, texto de referencia, `sampled_ids.csv`) |
+| 2. OCR | `python -m src.ocr_extraction` (en el entorno aislado de PaddleOCR) | 47 min | `data/ocr/<cv_id>.json` |
+| 3. Calidad del OCR | `python -m src.ocr_quality` | 1 min | tablas `ocr_quality_*` |
+| 4. Limpieza | `python -m src.preprocessing` | 3 min | `data/processed/cvs.csv` |
+| 5. Partición | `python -m src.split` | segundos | `data/splits/{train,val,test}.csv` |
+| 6. Baselines | `python -m src.baseline_median` / `baseline_rules` / `baseline_tfidf [--no-digits]` / `baseline_embeddings` | 2 min | `models/baselines/`, predicciones |
+| 7. BERT | `python -m src.train_bert [--loss huber] [--text-col ...]` | 5–9 min por corrida | `models/bert/<nombre>/`, predicciones |
+| 8. Prueba de fechas | `python -m src.probe` | 2 min | `q1_probe_*.csv` |
+| 9. Evaluación final | `python -m src.evaluation --final` | segundos | todas las tablas de las secciones 9–10 |
+| 10. Figuras | `python -m src.visualization` | segundos | `output/figures/` |
+
+- Cada script acepta `--help`.
+- Las variantes de la Pregunta 3 se obtienen con `--text-col text_raw` y
+  `--text-col text_clean_conf`.
+- La semilla es 42 en todo el pipeline.
+- Las imágenes, los JSON del OCR y los pesos de los modelos no están en GitHub
+  (`.gitignore`): se regeneran con los pasos 1, 2, 6 y 7.
+- Los pasos 3–10 también se pueden ejecutar en local, si existen `data/` y `models/`.
+- Instalación local: ver `requirements.txt`. PaddlePaddle se instala primero desde su propio
+  índice; el comando está al inicio de ese archivo.
 
 ## 13. Cómo ejecutar la app de Streamlit
 _Pendiente (Fase 7)._

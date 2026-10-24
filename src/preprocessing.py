@@ -23,11 +23,10 @@ import pandas as pd
 
 from src.ocr_extraction import reading_order
 from src.utils import (EXP_CAP, ID_COL, METADATA_CSV, METRICS_DIR, OCR_DIR,
-                       PROCESSED_DIR, REFERENCE_TEXT_CSV, SEED, TABLE_DIR, TARGET,
+                       PROCESSED_CSV, REFERENCE_TEXT_CSV, SEED, TABLE_DIR, TARGET,
                        clip_years, load_json, save_json)
 
 CONF_THRESHOLD = 0.9
-PROCESSED_CSV = PROCESSED_DIR / "cvs.csv"
 
 # --- Fechas ------------------------------------------------------------------
 # PopResume escribe los periodos como AAAA.MM–AAAA.MM. El OCR a veces lee el guion
@@ -144,7 +143,9 @@ def main() -> None:
     rows, pii_tot, mask_tot = [], {}, {}
     n_repaired = n_low_conf = 0
     missing_ocr = []
-    for _, m in meta.iterrows():
+    for i, (_, m) in enumerate(meta.iterrows(), 1):
+        if i % 500 == 0:
+            print(f"{i}/{len(meta)} CVs procesados")
         path = OCR_DIR / f"{m[ID_COL]}.json"
         if not path.exists():
             missing_ocr.append(m[ID_COL])

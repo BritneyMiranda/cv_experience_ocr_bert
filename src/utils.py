@@ -33,6 +33,11 @@ METRICS_DIR = OUTPUT_DIR / "metrics"
 METADATA_CSV = RAW_DIR / "metadata.csv"
 SAMPLED_IDS_CSV = RAW_DIR / "sampled_ids.csv"
 REFERENCE_TEXT_CSV = RAW_DIR / "reference_text.csv"
+PROCESSED_CSV = PROCESSED_DIR / "cvs.csv"
+PREDICTIONS_DIR = METRICS_DIR / "predictions"
+SPLITS = ["train", "val", "test"]
+TEXT_COLS = ["text_raw", "text_clean", "text_clean_conf", "text_ref"]
+DEFAULT_TEXT_COL = "text_clean"
 
 # --- Constantes del proyecto -----------------------------------------------
 SEED = 42
@@ -80,6 +85,19 @@ def to_band(y) -> np.ndarray:
     for lo, hi, name in BANDS:
         labels[(y >= lo) & (y <= hi)] = name
     return labels
+
+
+def load_splits() -> dict:
+    """{"train"|"val"|"test": DataFrame} con los textos procesados de cada CV.
+    Todos los modelos usan exactamente esta partición."""
+    import pandas as pd
+    cvs = pd.read_csv(PROCESSED_CSV, dtype={ID_COL: str})
+    cvs[TEXT_COLS] = cvs[TEXT_COLS].fillna("")
+    frames = {}
+    for split in SPLITS:
+        ids = pd.read_csv(SPLITS_DIR / f"{split}.csv", dtype={ID_COL: str})[[ID_COL]]
+        frames[split] = ids.merge(cvs, on=ID_COL, how="left")
+    return frames
 
 
 def save_json(obj, path: Path) -> None:

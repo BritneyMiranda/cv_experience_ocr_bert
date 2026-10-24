@@ -8,7 +8,8 @@
 - Longitud: los CVs limpios tienen a lo sumo ~160 tokens de DistilBERT, así que
   max_length=256 cubre el CV completo (se reporta cuántos se truncarían). No hace falta
   head+tail ni chunking: todas las fechas llegan al modelo.
-- Early stopping sobre el MAE de validación (en años), paciencia 2 épocas.
+- Early stopping sobre el MAE de validación (en años), paciencia 3 épocas.
+- El learning rate se elige en validación entre 5e-5, 3e-5 y 2e-5 (corridas con --tag).
 
 Uso:
     python -m src.train_bert
@@ -62,11 +63,14 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, default=16)
     parser.add_argument("--epochs", type=int, default=15)
     parser.add_argument("--max-length", type=int, default=256)
+    parser.add_argument("--patience", type=int, default=3)
     parser.add_argument("--seed", type=int, default=SEED)
+    parser.add_argument("--tag", default="", help="sufijo para corridas de búsqueda (p. ej. lr3e-5)")
     args = parser.parse_args()
     set_seed(args.seed)
 
-    name = model_name("bert" if args.loss == "mse" else "bert_huber", args.text_col)
+    base = "bert" if args.loss == "mse" else "bert_huber"
+    name = model_name(f"{base}_{args.tag}" if args.tag else base, args.text_col)
     out_dir = BERT_DIR / name
     frames = load_splits()
     tokenizer = AutoTokenizer.from_pretrained(args.model)
@@ -112,7 +116,7 @@ def main() -> None:
         model=model, args=training_args, train_dataset=train_ds, eval_dataset=val_ds,
         data_collator=DataCollatorWithPadding(tokenizer),
         compute_metrics=compute_metrics,
-        callbacks=[EarlyStoppingCallback(early_stopping_patience=2)],
+        callbacks=[EarlyStoppingCallback(early_stopping_patience=args.patience)],
     )
 
     t0 = time.time()
@@ -140,7 +144,7 @@ def main() -> None:
     epochs_run = max((e.get("epoch", 0) for e in trainer.state.log_history), default=0)
     run_and_save(name, predict, frames, args.text_col, train_seconds, extra={
         "base_model": args.model, "loss": args.loss, "learning_rate": args.lr,
-        "batch_size": args.batch_size, "max_epochs": args.epochs,
+        "batch_size": args.batch_size, "max_epochs": args.epochs, "patience": args.patience,
         "epochs_run": epochs_run, "best_checkpoint": best_checkpoint,
         "max_length": args.max_length, "tokens_median": float(np.median(lengths)),
         "tokens_max": int(max(lengths)), "n_truncated_train": truncated,

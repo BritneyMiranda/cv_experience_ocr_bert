@@ -1,32 +1,33 @@
-# Versiones fijadas. Se actualizan con las versiones reales usadas en Google Colab
-# (ver la última celda de notebooks/colab_pipeline.ipynb).
+# Versiones usadas en Google Colab (Python 3.13) para todo el proyecto.
 #
-# PaddlePaddle se instala desde su propio índice ANTES que este archivo:
-#   CPU (local / Streamlit):
-#     pip install paddlepaddle==3.2.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
-#   GPU (Colab, CUDA 12.6):
-#     pip install paddlepaddle-gpu==3.2.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
+# PaddleOCR se ejecutó en un entorno aislado con Python 3.12 (ver la Fase 2 del notebook).
+# PaddlePaddle se instala ANTES que este archivo, desde su propio índice:
+#   CPU:  pip install paddlepaddle==3.2.0 -i https://www.paddlepaddle.org.cn/packages/stable/cpu/
+#   GPU (CUDA 12.6, la usada para el OCR de los 4,000 CVs):
+#         pip install paddlepaddle-gpu==3.2.0 -i https://www.paddlepaddle.org.cn/packages/stable/cu126/
 paddleocr==3.2.0
 
 # Datos
-datasets==4.0.0
-huggingface_hub==0.34.4
-pandas==2.2.2
-numpy==2.0.2
+datasets==4.8.5
+huggingface_hub==1.33.0
+pandas==2.2.3
+numpy==2.1.3
+pyarrow==23.0.1
 pillow==11.3.0
-pymupdf==1.26.3
+pymupdf==2.0
 
-# OCR quality
+# Calidad del OCR
 jiwer==4.0.0
 
 # Modelos
 scikit-learn==1.6.1
-torch==2.8.0
-transformers==4.55.4
-accelerate==1.10.1
-sentence-transformers==5.1.0
+joblib==1.6.0
+torch==2.11.0
+transformers==5.20.2
+accelerate==1.15.0
+sentence-transformers==5.7.0
 
-# Visualización y app
+# Figuras y app
 matplotlib==3.10.0
 seaborn==0.13.2
-streamlit==1.49.1
+streamlit==1.66.1

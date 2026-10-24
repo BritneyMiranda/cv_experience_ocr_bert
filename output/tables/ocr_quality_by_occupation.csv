@@ -1,0 +1,7 @@
+occupation,cer_raw,wer_raw,cer,wer,years_ok_raw,years_ok_repaired,ranges_ok_repaired,mean_conf
+accountants_auditors,0.0099,0.0942,0.0074,0.0342,0.9685,0.9996,1.0,0.9892
+construction_laborers,0.0091,0.085,0.006,0.0272,0.974,1.0,1.0,0.9898
+elementary_middle_school_teachers,0.0086,0.0789,0.0069,0.0311,0.981,0.9994,0.9807,0.989
+registered_nurses,0.0104,0.0935,0.0087,0.0421,0.8874,1.0,1.0,0.9888
+software_developers,0.0113,0.1027,0.0092,0.0438,0.9329,0.9994,1.0,0.9884
+ALL,0.0099,0.0909,0.0076,0.0357,0.9488,0.9997,0.9961,0.989

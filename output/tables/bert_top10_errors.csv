@@ -1,0 +1,162 @@
+cv_id,occupation,y_true,bert,error,rules_on_ocr,n_jobs,gap_years,overlap,ocr_dates_match_reference,text
+registered_nurses_12905,registered_nurses,16.366182345287115,17.294921875,0.9287395297128853,16.333333333333332,4,1.6666666666666667,False,True,"WORK HISTORY
+Registered Nurses, WellBridge Medical Group, 2018.12 - 2023.01
+- Managed clinical compliance programs
+- Developed interdisciplinary care strategies
+Registered Nurses, OpenPath Nursing Services, 2014.11 - 2018.12
+- Developed staffing allocation models
+- Implemented evidence-based practice models
+Registered Nurses, Harmony Life Care, 2010.10 - 2014.11
+- Provided perioperative nursing care
+- Reviewed diagnostic imaging results
+Registered Nurses, Harmony Way Health, 2005.01 - 2009.02
+- Collected laboratory specimens
+- Updated patient medical records
+
+EDUCATION
+Bachelor's, Human Biology, Parkview University, 2003
+- Completed coursework in immunization practices
+- Studied principles of population health"
+registered_nurses_24329,registered_nurses,16.63183830655248,17.529296875,0.8974585684475187,16.666666666666668,4,1.8333333333333333,False,True,"WORK HISTORY
+Registered Nurses, Harmony Life Care, 2018.11 - 2023.01
+- Designed clinical care protocols
+- Established nursing performance metrics
+Registered Nurses, LifeHands Nursing Services, 2014.09 - 2018.11
+- Managed care delivery innovation
+- Directed interdisciplinary workflow alignment
+Registered Nurses, SunLife Nursing Services, 2009.03 - 2013.05
+- Performed patient triage
+- Managed patient mobility programs
+Registered Nurses, EverHands Health Group, 2004.07 - 2008.09
+- Assisted with physical therapy exercises
+- Maintained infection control protocols
+
+EDUCATION
+Bachelor's, Clinical Support, Crestline University, 2003
+- Completed coursework in medical-surgical nursing
+- Studied fundamentals of vital signs monitoring"
+registered_nurses_44448,registered_nurses,17.659924440692286,18.486328125,0.8264036843077136,17.666666666666668,4,2.4166666666666665,False,True,"WORK HISTORY
+Registered Nurses, Harmony Hands Health, 2018.08 - 2023.01
+- Developed patient safety programs
+- Directed care delivery improvements
+Registered Nurses, SunSpring Nursing, 2014.03 - 2018.08
+- Directed care delivery improvements
+- Developed staffing allocation models
+Registered Nurses, Compassion Path Medical, 2008.05 - 2012.10
+- Performed advanced wound assessments
+- Conducted post-operative assessments
+Registered Nurses, TrueWay Nursing, 2002.12 - 2007.05
+- Monitored patient dietary needs
+- Provided post-procedure care
+
+EDUCATION
+Associate's degree, Clinical Health, Willow Ridge University, 2001
+- Completed coursework in first aid principles
+- Completed coursework in clinical pharmacology"
+accountants_auditors_33251,accountants_auditors,19.14562659116599,19.951171875,0.8055452838340109,19.166666666666668,4,0.0,False,True,"WORK HISTORY
+Accountants Auditors, ClearCount Services, 2018.04 - 2023.01
+- Led audit planning governance
+- Managed consolidation processes
+Accountants Auditors, EverBalance Group, 2013.07 - 2018.04
+- Established cost management systems
+- Managed consolidation processes
+Accountants Auditors, Precision Ledger, 2008.09 - 2013.07
+- Managed fixed asset accounting
+- Reviewed tax provisions
+Accountants Auditors, Integrity Count Financial, 2003.11 - 2008.09
+- Performed data validation checks
+- Processed accounts receivable transactions
+
+EDUCATION
+Professional degree, Accounting and Finance, Westbrook University, 2006
+Bachelor's, Operations Management, Elm Ridge University, 2002
+- Studied fundamentals of quantitative analysis
+- Completed coursework in audit risk modeling"
+software_developers_34027,software_developers,4.074544410561857,4.85107421875,0.7765298081881431,4.083333333333333,2,1.3333333333333333,False,True,"WORK HISTORY
+Software Developers, Cloudframe Software, 2020.02 - 2022.02
+- Defined API governance models
+- Implemented long-term maintenance plans
+Software Developers, Brightfield Digital, 2016.09 - 2018.10
+- Assisted with Cl pipeline tasks
+- Reviewed API documentation
+
+EDUCATION
+Bachelor's, Springfield University, 2004
+- Studied principles of programming languages
+- Completed coursework in data structures implementation"
+accountants_auditors_10456,accountants_auditors,6.47510725236403,7.2412109375,0.7661036851359704,6.5,3,1.4166666666666667,False,True,"WORK HISTORY
+Accountants Auditors, Balanced Books Group, 2020.11 - 2023.01
+- Led regulatory compliance initiatives
+- Developed financial risk models
+Accountants Auditors, Reliable Balance Group, 2017.12 - 2020.02
+- Developed financial policies
+- Coordinated audit schedules
+Accountants Auditors, Reliable Balance Co., 2015.02 - 2017.04
+- Reconciled subsidiary ledgers
+- Prepared trial balances
+
+EDUCATION
+Bachelor's, Risk Management, Clearfield University, 2013
+- Completed coursework in pension accounting basics
+- Studied fundamentals of operations management"
+accountants_auditors_39794,accountants_auditors,3.5050841473918464,4.2431640625,0.7380799151081536,3.5,2,1.1666666666666667,False,True,"WORK HISTORY
+Accountants Auditors, AccuCount Solutions, 2019.06 - 2021.03
+- Led accounting process optimization
+- Established reporting automation systems
+Accountants Auditors, Balanced Path Advisors, 2016.07 - 2018.04
+- Processed journal corrections
+- Assisted with forecasting data
+
+EDUCATION
+Associate's degree, Business Management, Stonefield University, 2008
+- Studied fundamentals of auditing
+- Completed coursework in cost accounting"
+elementary_middle_school_teachers_46056,elementary_middle_school_teachers,4.769587362895527,5.4833984375,0.7138110746044726,4.75,2,0.8333333333333334,False,True,"WORK HISTORY
+Elementary Middle School Teachers, Caring Meadow School, 2018.10 - 2021.02
+- Designed performance monitoring systems
+- Implemented curriculum governance structures
+Elementary Middle School Teachers, Growing Minds School, 2015.07 - 2017.12
+- Conducted group reading activities
+- Tracked student participation
+
+EDUCATION
+Master's, Educational Support, Granite Hill University, 2009
+Bachelor's, Youth Development, Stonegate University, 2007
+- Completed coursework in student progress monitoring
+- Studied fundamentals of academic support strategies"
+accountants_auditors_09344,accountants_auditors,18.85309817629752,19.53125,0.6781518237024784,18.833333333333332,4,0.0,False,True,"WORK HISTORY
+Accountants Auditors, TrustCount Advisors, 2018.05 - 2023.01
+- Directed accounting leadership initiatives
+- Developed financial analytics frameworks
+Accountants Auditors, SteadyLedger Advisors, 2013.09 - 2018.05
+- Established tax compliance frameworks
+- Designed budgeting methodologies
+Accountants Auditors, CoreBooks Advisors, 2008.12 - 2013.09
+- Performed revenue recognition analysis
+- Managed fixed asset accounting
+Accountants Auditors, Reliable Ledger Services, 2004.03 - 2008.12
+- Assisted with monthly close procedures
+- Reviewed ledger postings
+
+EDUCATION
+Bachelor's, Data Analytics, Fairhill University, 2006
+- Completed coursework in performance measurement
+- Studied fundamentals of tax planning"
+registered_nurses_25378,registered_nurses,18.229283082121405,18.90625,0.6769669178785946,18.25,4,0.0,False,True,"WORK HISTORY
+Registered Nurses, Compassion Hands Medical, 2018.07 - 2023.01
+- Established clinical evaluation protocols
+- Managed clinical compliance programs
+Registered Nurses, WellBridge Medical Group, 2013.12 - 2018.07
+- Designed clinical documentation standards
+- Managed clinical resource planning
+Registered Nurses, Harmony Bridge Health, 2009.05 - 2013.12
+- Monitored patient compliance
+- Monitored patient response to treatments
+Registered Nurses, WellBridge Health Group, 2004.10 - 2009.05
+- Monitored patient pain levels
+- Monitored patient dietary needs
+
+EDUCATION
+Associate's degree, Patient Care, Woodview University, 2002
+- Completed coursework in nursing ethics
+- Studied principles of endocrine nursing"

@@ -1,0 +1,20 @@
+{
+  "model": "bert__text_raw",
+  "text_col": "text_raw",
+  "train_seconds": 411.99,
+  "inference_seconds_per_cv": 0.0013234198093414306,
+  "base_model": "distilbert-base-uncased",
+  "loss": "mse",
+  "learning_rate": 5e-05,
+  "batch_size": 16,
+  "max_epochs": 20,
+  "patience": 5,
+  "epochs_run": 20.0,
+  "best_checkpoint": "/tmp/bert_checkpoints/bert__text_raw/checkpoint-3325",
+  "max_length": 256,
+  "tokens_median": 96.0,
+  "tokens_max": 159,
+  "n_truncated_train": 0,
+  "seed": 42,
+  "hardware": "Tesla T4"
+}

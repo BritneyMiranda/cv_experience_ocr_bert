@@ -1,0 +1,17 @@
+experiment,setup,model,MAE
+OCR cleaning,raw OCR,TF-IDF + Ridge,1.031661660611942
+OCR cleaning,raw OCR,Embeddings + Ridge,1.3851338160876625
+OCR cleaning,raw OCR,Fine-tuned BERT,0.13900254484416116
+OCR cleaning,raw OCR,Rule-based (bonus),0.023529671332474862
+OCR cleaning,cleaned OCR (baseline setup),TF-IDF + Ridge,0.9843291145665706
+OCR cleaning,cleaned OCR (baseline setup),Embeddings + Ridge,1.2931725538640895
+OCR cleaning,cleaned OCR (baseline setup),Fine-tuned BERT,0.16073390552495914
+OCR cleaning,cleaned OCR (baseline setup),Rule-based (bonus),0.023529671332474862
+OCR cleaning,"cleaned, low-confidence lines removed",TF-IDF + Ridge,0.9850464560121394
+OCR cleaning,"cleaned, low-confidence lines removed",Embeddings + Ridge,1.292724963601528
+OCR cleaning,"cleaned, low-confidence lines removed",Fine-tuned BERT,0.13707788060302875
+OCR cleaning,"cleaned, low-confidence lines removed",Rule-based (bonus),0.023529671332474862
+Numbers in TF-IDF,keep digits (baseline setup),TF-IDF + Ridge,0.9843291145665706
+Numbers in TF-IDF,remove digits,TF-IDF + Ridge,1.8291188453580616
+BERT loss,MSE (baseline setup),Fine-tuned BERT,0.16073390552495914
+BERT loss,Huber,Fine-tuned BERT,0.1231082212895387

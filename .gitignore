@@ -12,6 +12,7 @@ data/raw/*
 data/ocr/*
 !data/ocr/.gitkeep
 *.png
+!output/figures/*.png
 *.jpg
 *.jpeg
 *.parquet

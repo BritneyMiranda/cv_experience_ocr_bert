@@ -1,0 +1,20 @@
+{
+  "model": "bert_lr3e-5",
+  "text_col": "text_clean",
+  "train_seconds": 198.74,
+  "inference_seconds_per_cv": 0.0013422818978627523,
+  "base_model": "distilbert-base-uncased",
+  "loss": "mse",
+  "learning_rate": 3e-05,
+  "batch_size": 16,
+  "max_epochs": 15,
+  "patience": 3,
+  "epochs_run": 7.0,
+  "best_checkpoint": "/content/drive/MyDrive/cv_experience_ocr_bert/models/bert/bert_lr3e-5/checkpoints/checkpoint-700",
+  "max_length": 256,
+  "tokens_median": 96.0,
+  "tokens_max": 159,
+  "n_truncated_train": 0,
+  "seed": 42,
+  "hardware": "Tesla T4"
+}

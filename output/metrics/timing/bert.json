@@ -1,0 +1,20 @@
+{
+  "model": "bert",
+  "text_col": "text_clean",
+  "train_seconds": 264.26,
+  "inference_seconds_per_cv": 0.0012988126277923583,
+  "base_model": "distilbert-base-uncased",
+  "loss": "mse",
+  "learning_rate": 5e-05,
+  "batch_size": 16,
+  "max_epochs": 20,
+  "patience": 5,
+  "epochs_run": 18.0,
+  "best_checkpoint": "/tmp/bert_checkpoints/bert/checkpoint-2275",
+  "max_length": 256,
+  "tokens_median": 96.0,
+  "tokens_max": 159,
+  "n_truncated_train": 0,
+  "seed": 42,
+  "hardware": "Tesla T4"
+}

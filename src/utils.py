@@ -39,6 +39,7 @@ SEED = 42
 HF_DATASET = "sumin-yu/PopResume"
 N_PER_OCCUPATION = 800
 
+ID_COL = "cv_id"  # "<job>_<id>": el id de PopResume se repite entre ocupaciones
 TARGET = "exp_year"
 EXP_CAP = 20  # años; se revisa en download_data.py (regla del 15 %)
 

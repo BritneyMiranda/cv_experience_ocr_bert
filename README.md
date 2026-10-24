@@ -11,7 +11,42 @@ TF-IDF + Ridge y sentence embeddings + Ridge).
 _Pendiente._
 
 ## 2. Muestreo de CVs y distribución de la experiencia
-_Pendiente (Fase 1)._
+**Dataset:** [PopResume](https://huggingface.co/datasets/sumin-yu/PopResume) (Yu, Park & Moon,
+EMNLP 2026; CC BY 4.0), CVs sintéticos generados a partir de estadísticas de población de EE. UU.
+
+**Muestreo** ([src/download_data.py](src/download_data.py)):
+- Solo imágenes **sin foto** (`has_photo == False`).
+- **800 CVs por ocupación, 4,000 en total**, con semilla **42**.
+- Se hace en dos pasos. Primero se lee un índice liviano de los 43 shards (todas las columnas
+  menos la imagen) y se sortean los CVs con `numpy.random.default_rng(42)`. Esto da un muestreo
+  aleatorio **uniforme** sobre toda la población sin foto, sin depender del tamaño de un buffer de
+  mezcla como en el streaming. Después se descarga cada shard, se extraen solo las imágenes
+  sorteadas y el shard se borra.
+- El `id` de PopResume se repite entre ocupaciones, así que la clave del proyecto es
+  `cv_id = "<job>_<id>"`. Ningún CV tenía más de una imagen sin foto.
+- Los IDs sorteados están en [data/raw/sampled_ids.csv](data/raw/sampled_ids.csv). Con ese
+  archivo, o con la misma semilla, la muestra se reproduce exactamente.
+
+| Ocupación | Población sin foto | Muestra | Media | Mediana | Máx. | CVs ≥ 20 años |
+|---|---:|---:|---:|---:|---:|---:|
+| Accountants & auditors | 7,784 | 800 | 7.27 | 6.24 | 25.6 | 11 |
+| Construction laborers | 5,910 | 800 | 5.96 | 4.60 | 22.6 | 10 |
+| Elementary / middle school teachers | 16,188 | 800 | 6.80 | 5.95 | 26.7 | 6 |
+| Registered nurses | 17,632 | 800 | 6.46 | 5.63 | 24.0 | 2 |
+| Software developers | 13,370 | 800 | 6.33 | 5.64 | 22.4 | 3 |
+| **Total** | **60,884** | **4,000** | **6.56** | **5.66** | **26.7** | **32** |
+
+**Target:** `exp_year`, los años de experiencia, que en el dataset es un valor continuo (por
+ejemplo 3.44). Se recorta a **0–20**, y 20 se lee como "20 o más".
+
+**Revisión del tope:** solo **32 CVs (0.8 %)** llegan a 20 años o más, muy por debajo del umbral
+del 15 %. Por eso se **mantiene el tope en 20** para todos los modelos.
+
+La distribución está sesgada a la derecha: la mediana es 5.7 años y hay pocos CVs senior. Por
+eso esperamos que los modelos tiendan a "tirar hacia el centro", sobrestimando a los juniors y
+subestimando a los seniors (ver la Pregunta 1).
+
+Tabla completa: [output/tables/target_distribution.csv](output/tables/target_distribution.csv).
 
 ## 3. PaddleOCR: modelo, configuración y orden de lectura
 _Pendiente (Fase 2)._

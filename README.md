@@ -194,10 +194,60 @@ Un CV limpio tiene en promedio **516 caracteres y 65 palabras**, unos ~130 token
 así que cabe completo en 512 tokens.
 
 ## 6. Partición train / validation / test
-_Pendiente (Fase 4)._
+[src/split.py](src/split.py) divide los CVs **por `cv_id`** en 70 / 15 / 15 %, con semilla 42,
+**estratificando por ocupación × banda de experiencia**: 20 estratos con las bandas 0–2, 3–5,
+6–10 y 11–20. Los IDs están en [data/splits/](data/splits/) y **todos los modelos usan
+exactamente esta partición**.
+
+| Split | CVs | Media de años | 0–2 | 3–5 | 6–10 | 11–20 |
+|---|---:|---:|---:|---:|---:|---:|
+| train | 2,800 | 6.54 | 563 | 801 | 908 | 528 |
+| val | 600 | 6.50 | 121 | 171 | 195 | 113 |
+| test | 600 | 6.67 | 121 | 172 | 194 | 113 |
+
+Toda la selección de hiperparámetros usa **validation**. Los scripts de entrenamiento solo
+imprimen métricas de validación; **el test se evalúa una única vez, al final** (sección 9).
 
 ## 7. Baselines
-_Pendiente (Fase 4)._
+Todos predicen un número de años, que se recorta a [0, 20]. Usan `text_clean` como entrada
+y se ajustan solo con validación.
+
+| Modelo | Cómo funciona | Hiperparámetros elegidos en val |
+|---|---|---|
+| **Mediana** ([baseline_median.py](src/baseline_median.py)) | Predice siempre la mediana de train (5.64 años). No lee el texto. | — |
+| **TF-IDF + Ridge** ([baseline_tfidf.py](src/baseline_tfidf.py)) | N-gramas de palabras con TF-IDF (`sublinear_tf`, `min_df=2`) + regresión Ridge | n-gramas 1–3, α = 0.001 |
+| **Embeddings + Ridge** ([baseline_embeddings.py](src/baseline_embeddings.py)) | `all-MiniLM-L6-v2` **congelado** (384 dim., vectores normalizados) + Ridge | α = 0.01 |
+| **Reglas (bonus)** ([baseline_rules.py](src/baseline_rules.py)) | Extrae los periodos `AAAA.MM – AAAA.MM` con regex, une los solapamientos y suma los meses. No se entrena. | — |
+
+**Decisiones:**
+- **Números en TF-IDF: se conservan.** El patrón de tokens `\b\w+\b` convierte
+  `2018.12 - 2023.01` en `2018`, `12`, `2023`, `01`. TF-IDF no puede restar fechas, pero sí
+  aprender que un año de inicio temprano o muchas líneas de cargo indican más experiencia. Sin
+  dígitos, el MAE de validación empeora de **0.97 a 1.67 años**.
+- **α de TF-IDF.** La búsqueda (α de 0.001 a 10, n-gramas de 1 a 3) es plana por debajo de
+  α = 0.03: de 0.03 a 0.001 el MAE solo mejora 0.006 años. Con 2,800 CVs el modelo casi no
+  necesita regularización.
+- **CVs largos para el encoder.** MiniLM admite 256 tokens. El código parte los textos más
+  largos en trozos de líneas completas de hasta 250 tokens, para no separar un cargo de sus
+  fechas, y promedia los vectores ponderando por tokens. En la práctica **ningún CV lo
+  necesitó**: la mediana es de 94 tokens y el máximo, 157.
+- **Modelo de reglas.** Si el OCR corta un mes (`2023.0`), usa el mes 6. "Present" o
+  "Current" se interpretan como la fecha de referencia del dataset, 2023.01.
+
+**Resultados en validación** (los de test están en la sección 9):
+
+| Modelo | MAE | RMSE | ±1 | ±2 | ±3 | R² |
+|---|---:|---:|---:|---:|---:|---:|
+| Mediana | 3.61 | 4.62 | 15.5 % | 31.2 % | 49.0 % | −0.04 |
+| TF-IDF sin dígitos | 1.67 | 2.34 | 42.7 % | 70.7 % | 85.5 % | 0.74 |
+| Embeddings + Ridge | 1.28 | 1.71 | 49.8 % | 79.3 % | 93.3 % | 0.86 |
+| TF-IDF + Ridge | 0.97 | 1.31 | 62.7 % | 91.2 % | 96.5 % | 0.92 |
+| **Reglas** | **0.023** | **0.045** | **100 %** | **100 %** | **100 %** | **1.00** |
+
+El modelo de reglas se equivoca en promedio **~1 semana**. Esto confirma que `exp_year` es
+la suma de los periodos de trabajo; el error restante viene de que las fechas del CV están en
+meses y el dataset calcula con días. TF-IDF le gana a los embeddings porque los embeddings de
+frases resumen el *tema* del texto y prácticamente ignoran los dígitos de las fechas.
 
 ## 8. BERT como regresor
 _Pendiente (Fase 5)._

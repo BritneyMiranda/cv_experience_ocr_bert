@@ -365,8 +365,11 @@ with tab4:
 
     st.divider()
     st.subheader("Ejemplos de buenas y malas predicciones")
-    multi_job = df[df["text_clean"].map(lambda t: len(periods(t)) >= 4)]
-    good = multi_job.loc[multi_job["bert_error"].abs().idxmin()]
+    # Ejemplo bueno: ≥ 4 trabajos, lejos del tope (ahí el recorte a 20 "ayuda") y donde
+    # TF-IDF falla por ≥ 1 año, para mostrar lo que BERT aporta. El mejor de BERT entre ellos.
+    candidates = df[df["text_clean"].map(lambda t: len(periods(t)) >= 4)
+                    & (df["y"] < EXP_CAP - 1) & ((df["tfidf"] - df["y"]).abs() >= 1)]
+    good = candidates.loc[candidates["bert_error"].abs().idxmin()]
     bad = df.loc[df["bert_error"].abs().idxmax()]
     g, b = st.columns(2)
     with g.container(border=True):
@@ -374,8 +377,9 @@ with tab4:
         st.markdown(f"Real **{good['y']:.2f}** años · BERT **{good['bert']:.2f}** · "
                     f"TF-IDF {good['tfidf']:.2f}")
         st.code(good["text_clean"], language=None)
-        st.caption("Cuatro trabajos consecutivos sin huecos: BERT suma bien los periodos. TF-IDF, "
-                   "que solo ve años sueltos y vocabulario, se aleja más.")
+        st.caption(f"{len(periods(good['text_clean']))} trabajos: BERT combina los periodos y "
+                   f"queda a {abs(good['bert_error']):.2f} años. TF-IDF, que solo ve años sueltos "
+                   f"y vocabulario, se equivoca en {abs(good['tfidf'] - good['y']):.1f} años.")
     with b.container(border=True):
         st.markdown(f":red-badge[:material/close: Mala] **{bad['cv_id']}**")
         st.markdown(f"Real **{bad['y']:.2f}** años · BERT **{bad['bert']:.2f}** · "

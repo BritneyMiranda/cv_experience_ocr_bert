@@ -23,11 +23,10 @@ import pandas as pd
 
 from src.ocr_extraction import reading_order
 from src.utils import (EXP_CAP, ID_COL, METADATA_CSV, METRICS_DIR, OCR_DIR,
-                       PROCESSED_DIR, REFERENCE_TEXT_CSV, SEED, TABLE_DIR, TARGET,
+                       PROCESSED_CSV, REFERENCE_TEXT_CSV, SEED, TABLE_DIR, TARGET,
                        clip_years, load_json, save_json)
 
 CONF_THRESHOLD = 0.9
-PROCESSED_CSV = PROCESSED_DIR / "cvs.csv"
 
 # --- Fechas ------------------------------------------------------------------
 # PopResume escribe los periodos como AAAA.MM–AAAA.MM. El OCR a veces lee el guion

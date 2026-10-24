@@ -10,6 +10,7 @@ Uso:
     python -m src.ocr_extraction                         # todos los CVs muestreados
     python -m src.ocr_extraction --limit 40 --out-dir data/ocr_bench/en_mobile \
         --rec-model en_PP-OCRv5_mobile_rec               # benchmark de modelos
+    python -m src.ocr_extraction --image cv.png --json-out cv.json   # una imagen (app)
 """
 
 import argparse
@@ -210,7 +211,15 @@ def main() -> None:
     parser.add_argument("--rec-model", default=REC_MODEL)
     parser.add_argument("--limit", type=int, help="procesar solo n CVs al azar (benchmark)")
     parser.add_argument("--out-dir", type=Path, default=OCR_DIR)
+    parser.add_argument("--image", type=Path, help="OCR de una sola imagen (lo usa la app)")
+    parser.add_argument("--json-out", type=Path, help="con --image: dónde guardar el resultado")
     args = parser.parse_args()
+
+    if args.image:
+        record = ocr_image(build_ocr(args.det_model, args.rec_model), args.image)
+        save_json({"det_model": args.det_model, "rec_model": args.rec_model, **record},
+                  args.json_out)
+        return
 
     ids = pd.read_csv(SAMPLED_IDS_CSV, dtype=str)[ID_COL]
     if args.limit:

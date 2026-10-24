@@ -143,7 +143,9 @@ def main() -> None:
     rows, pii_tot, mask_tot = [], {}, {}
     n_repaired = n_low_conf = 0
     missing_ocr = []
-    for _, m in meta.iterrows():
+    for i, (_, m) in enumerate(meta.iterrows(), 1):
+        if i % 500 == 0:
+            print(f"{i}/{len(meta)} CVs procesados")
         path = OCR_DIR / f"{m[ID_COL]}.json"
         if not path.exists():
             missing_ocr.append(m[ID_COL])

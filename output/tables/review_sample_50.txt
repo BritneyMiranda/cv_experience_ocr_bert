@@ -186,7 +186,7 @@ Software Developers, Openframe Digital, 2017.11 - 2020.03
 EDUCATION
 Master's, Larkspur University, 2015
 Bachelor's, Brookway University, 2013
- Studied principles of modular design
+Studied principles of modular design
 - Studied fundamentals of programming paradigms
 
 ===== construction_laborers_28152 | exp_year=3.74 =====
@@ -384,7 +384,7 @@ Registered Nurses, TrueWay Nursing, 2021.10 - 2023.01
 EDUCATION
 Bachelor's, Clinical Health, Brookhaven University, 2022
 - Completed coursework in patient positioning
- Studied fundamentals of patient advocacy
+Studied fundamentals of patient advocacy
 
 ===== accountants_auditors_15810 | exp_year=5.71 =====
 WORK HISTORY

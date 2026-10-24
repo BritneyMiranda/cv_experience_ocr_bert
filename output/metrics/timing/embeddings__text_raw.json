@@ -1,0 +1,11 @@
+{
+  "model": "embeddings__text_raw",
+  "text_col": "text_raw",
+  "train_seconds": 5.13,
+  "inference_seconds_per_cv": 0.001764144500096639,
+  "encoder": "sentence-transformers/all-MiniLM-L6-v2",
+  "alpha": 0.01,
+  "tokens_median": 94.0,
+  "tokens_max": 157,
+  "cvs_chunked": 0
+}

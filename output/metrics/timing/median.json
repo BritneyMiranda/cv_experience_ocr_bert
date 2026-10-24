@@ -1,0 +1,6 @@
+{
+  "model": "median",
+  "text_col": "text_clean",
+  "train_seconds": 0.0,
+  "inference_seconds_per_cv": 3.806749979654948e-07
+}

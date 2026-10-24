@@ -1,0 +1,12 @@
+{
+  "model": "tfidf",
+  "text_col": "text_clean",
+  "train_seconds": 0.53,
+  "inference_seconds_per_cv": 0.0001190646489461263,
+  "ngram": [
+    1,
+    3
+  ],
+  "alpha": 0.001,
+  "n_features": 29301
+}

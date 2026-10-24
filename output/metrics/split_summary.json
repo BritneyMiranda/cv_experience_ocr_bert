@@ -1,0 +1,55 @@
+{
+  "seed": 42,
+  "stratify": "occupation x band",
+  "train": {
+    "n": 2800,
+    "y_mean": 6.535,
+    "bands": {
+      "0-2": 563,
+      "11-20": 528,
+      "3-5": 801,
+      "6-10": 908
+    },
+    "occupations": {
+      "accountants_auditors": 561,
+      "construction_laborers": 560,
+      "elementary_middle_school_teachers": 560,
+      "registered_nurses": 560,
+      "software_developers": 559
+    }
+  },
+  "val": {
+    "n": 600,
+    "y_mean": 6.495,
+    "bands": {
+      "0-2": 121,
+      "11-20": 113,
+      "3-5": 171,
+      "6-10": 195
+    },
+    "occupations": {
+      "accountants_auditors": 120,
+      "construction_laborers": 120,
+      "elementary_middle_school_teachers": 120,
+      "registered_nurses": 120,
+      "software_developers": 120
+    }
+  },
+  "test": {
+    "n": 600,
+    "y_mean": 6.666,
+    "bands": {
+      "0-2": 121,
+      "11-20": 113,
+      "3-5": 172,
+      "6-10": 194
+    },
+    "occupations": {
+      "accountants_auditors": 119,
+      "construction_laborers": 120,
+      "elementary_middle_school_teachers": 120,
+      "registered_nurses": 120,
+      "software_developers": 121
+    }
+  }
+}

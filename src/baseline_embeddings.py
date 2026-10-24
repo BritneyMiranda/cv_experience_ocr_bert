@@ -27,7 +27,7 @@ from src.utils import (BASELINES_DIR, DEFAULT_TEXT_COL, TABLE_DIR, TEXT_COLS, cl
 
 ENCODER = "sentence-transformers/all-MiniLM-L6-v2"
 CHUNK_TOKENS = 250
-ALPHAS = [0.01, 0.03, 0.1, 0.3, 1.0, 3.0, 10.0]
+ALPHAS = [0.0001, 0.0003, 0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0, 3.0, 10.0]
 
 
 class ChunkedEncoder:

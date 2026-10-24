@@ -29,7 +29,7 @@ from src.evaluation import model_name, run_and_save
 from src.utils import (BASELINES_DIR, DEFAULT_TEXT_COL, TABLE_DIR, TEXT_COLS, clip_years,
                        load_splits)
 
-ALPHAS = [0.03, 0.1, 0.3, 1.0, 3.0, 10.0]
+ALPHAS = [0.001, 0.003, 0.01, 0.03, 0.1, 0.3, 1.0, 3.0, 10.0]
 NGRAMS = [(1, 1), (1, 2), (1, 3)]
 
 
